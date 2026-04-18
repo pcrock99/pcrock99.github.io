@@ -1,8 +1,31 @@
 [
-    {
-        "id": 1,
-        "title": "Hello World",
-        "date": "2026-04-18",
-        "content": "<p>这是我的第一篇博客文章。欢迎来到 PCROCK 博客！</p><p>你可以在这里写任何内容，支持 <strong>粗体</strong>、<em>斜体</em>、<a href='#'>链接</a> 等 HTML 标签。</p>"
+{
+"id": 1,
+"title": "Hello World",
+"date": "2026-04-18",
+"content": "<p>这是我的第一篇博客文章。欢迎来到 PCROCK 博客！</p><p>你可以在这里写任何内容，支持 <strong>粗体</strong>、<em>斜体</em>、<a href='#'>链接</a> 等 HTML 标签。</p>"
+},
+{
+"id":2,
+"title":"检测歌曲链接"
+"date":"2026-0418"
+"content":"
+let urls = [
+    "https://example.com/song1.mp3",
+    "https://example.com/song2.mp3"
+];
+
+urls.forEach(async (url) => {
+    try {
+        let response = await fetch(url, { method: "HEAD" });
+        if (response.ok) {
+            console.log("✅ 有效:", url);
+        } else {
+            console.log("❌ 失效 (" + response.status + "):", url);
+        }
+    } catch(e) {
+        console.log("❌ 无法访问:", url);
     }
+});"
+}
 ]
