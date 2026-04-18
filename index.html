@@ -1,198 +1,240 @@
-<!DOCTYPE tmlpublic"-//w3c//dtdxhtml1.0transitional//en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-
 <head>
-    <title>pcrock</title>
+    <title>PCROCK BLOG</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/pcrock/pcrock.css" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <style>
+        /* 博客列表样式 */
+        .blog-list {
+            width: 680px;
+            margin: 20px auto;
+            background: rgba(240, 240, 240, 0.95);
+            border-radius: 30px;
+            padding: 20px 0;
+            text-align: left;
+        }
+        .blog-item {
+            padding: 12px 30px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .blog-item:last-child {
+            border-bottom: none;
+        }
+        .blog-title {
+            font-size: 18px;
+            color: #202020;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .blog-title:hover {
+            color: #FFCC33;
+            text-decoration: underline;
+        }
+        .blog-date {
+            font-size: 14px;
+            color: #606060;
+        }
+        .no-posts {
+            text-align: center;
+            padding: 40px;
+            color: #606060;
+        }
+        /* 播放器样式 */
+        .music-player {
+            width: 680px;
+            margin: 10px auto 20px;
+            background: rgba(200, 200, 200, 0.8);
+            border-radius: 40px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .music-player button {
+            background: #404040;
+            color: white;
+            border: none;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .music-player button:hover {
+            background: #FFCC33;
+            color: #202020;
+        }
+        .music-player .song-name {
+            font-size: 14px;
+            color: #202020;
+            min-width: 180px;
+            text-align: center;
+        }
+        /* 调整主面板高度适应内容 */
+        .pcrock {
+            height: auto;
+            min-height: 240px;
+            border-radius: 30px;
+            padding: 15px 0;
+        }
+    </style>
 </head>
-<style>
-</style>
 <body bgcolor="#404040">
-            <link rel="stylesheet" type="text/css" media="screen" href="/pcrock/pcrock.css" />
-            <link rel="shortcut icon" href="favicon.ico" />
-            <div style="text-align:center;text-decoration:" none="">
-                <div id="time" style="color:#000000;font-size:28px"></div>
-                <div class="pcrock">
-                   <a target="_blank" href="http://pcrock.hkfree.work/"><h1>PCROCK</h1>
-                    <div id="menu">
-                        <div class="dropdown">
-                            <button class="p1">Tools</button>
-                            <div class="dropdown-content">
-                                <a target="_blank" href="https://mpv.io/">mpv</a>
-                                <a target="_blank" href="https://wget.en.softonic.com/">wget</a>
-                                <a target="_blank" href="https://aria2c.github.io/">aria2c</a>
-				<a target="_blank" href="http://pcrock88.github.io/AriaNg">aria RPC</a>
-                                <a target="_blank" href="http://ffmpeg.org/">ffmpeg</a>
-                                <a target="_blank" href="https://www.yt-dl.org/">youtube-dl</a>
-                                <a target="_blank" href="https://c.runoob.com/">cntools</a>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button class="p2">Movie</button>
-                            <div class="dropdown-content">
+    <div style="text-align:center">
+        <div id="time" style="color:#000000;font-size:28px;margin-top:10px"></div>
+        
+        <!-- 音乐播放器 -->
+        <div class="music-player">
+            <button id="prevBtn">⏮</button>
+            <button id="playBtn">▶</button>
+            <button id="nextBtn">⏭</button>
+            <span class="song-name" id="songName">未播放</span>
+        </div>
 
-<a target="_blank" href="http://tonkiang.us/">TV</a>
-                                <a target="_blank" href="http://youku.com/">YouKu</a>
-                                <a target="_blank" href="http://iqiyi.com/">Aiqy</a>
-                                <a target="_blank" href="https://v.qq.com/">Ten</a>
-                                <a target="_blank" href="http://tv.sohu.com/">Sohu</a>
-                                <a target="_blank" href="http://le.com/">LeShi</a>
-                                <a target="_blank" href="https://mgtv.com/">ManGou</a>
-                                <a target="_blank" href="http://1905.com/vod/">1905</a>
-                                <a target="_blank" href="https://bilibili.com/">Bili</a>
-                                <a target="_blank" href="https://migu.cn/">migu</a>
-                                <a target="_blank" href="https://www.wasu.cn/">huasu</a>
-                                <a target="_blank" href="https://movie.douban.com/">douban</a>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button class="p3">m3u8</button>
-                            <div class="dropdown-content">
-                                <a target="_blank" href="http://bdyunzy.com/">bdyzy</a>
-                                <a target="_blank" href="http://mahuazy.net/">mhzy</a>
-                                <a target="_blank" href="http://bajiezy.cc/">bajie</a>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button class="p4">Live</button>
-                            <div class="dropdown-content">
-                                <a target="_blank" href="https://jx.jxbdzyw.com/m3u8/?url=https://hz6xy5vb.v2l.szbdyd.com:9306/xy-flv-live.huya-noidc.xycdn.com/xy_live/9112a228ec5288397df3ee07d743896f.flv">zxx</a>
-                                <a target="_blank" href="https://douyin.com">douyin</a>
-                                <a target="_blank" href="http://tv.cntv.cn">CCTV</a>
-                                <a target="_blank" href="https://douyu.com/">douyu</a>
-                                <a target="_blank" href="https://zhanqi.tv/">zhanqi</a>
-                                <a target="_blank" href="http://huya.com/">huya</a>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button class="p5">Music</button>
-                            <div class="dropdown-content">
-                                <a target="_blank" href="http://tool.liumingye.cn/music/">music</a>
-                                <a target="_blank" href="http://web.kugou.com/">kugou</a>
-                                <a target="_blank" href="http://music.163.com/">163</a>
-                                <a target="_blank" href="http://kuwo.cn/bang/index/">kuwo</a>
-                                <a target="_blank" href="http://douban.fm/">douban</a>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button class="p4">Radio-YN</button>
-                            <div class="dropdown-content">
+        <div class="pcrock">
+            <a target="_blank" href="http://pcrock.hkfree.work/"><h1>PCROCK</h1></a>
+            <!-- 博客文章列表容器 -->
+            <div id="blogContainer" class="blog-list">
+                <div class="no-posts">加载文章中...</div>
+            </div>
+        </div>
 
-<a target="_blank" href="http://tonkiang.us/">iptv-ss</a>
-                                <a target="_blank" href="http://live.xmcdn.com/live/903/64.m3u8">FM91.8</a>
-                                <a target="_blank" href="http://live.xmcdn.com/live/904/64.m3u8">FM97</a>
-                                <a target="_blank" href="http://live.xmcdn.com/live/905/64.m3u8">FM105.8</a>
-                                <a target="_blank" href="http://live.xmcdn.com/live/906/64.m3u8">FM95.4</a>
-                                <a target="_blank" href="http://live.xmcdn.com/live/907/64.m3u8">FM102.8</a>
-                                <a target="_blank" href="http://live.xmcdn.com/live/908/64.m3u8">FM105</a>
-                                <a target="_blank" href="http://live.xmcdn.com/live/909/64.m3u8">FM88.7</a>
-                                <a target="_blank" href="http://live.xmcdn.com/live/910/64.m3u8">FM100.8</a>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button class="p3">Radio</button>
-                            <div class="dropdown-content">
-                                <a target="_blank" href="https://lhttp.qingting.fm/live/4576/64k.mp3">青苹果</a>
-                                <a target="_blank" href="https://lhttp.qingting.fm/live/20207765/64k.mp3">摇滚天空</a>
-                                <a target="_blank" href="https://lhttp.qingting.fm/live/4804/64k.mp3">怀集音乐</a>
-                                <a target="_blank" href="https://lhttp.qingting.fm/live/4915/64k.mp3">清晨音乐</a>
-                                <a target="_blank" href="https://lhttp.qingting.fm/live/5022107/64k.mp3">动听音乐</a>
-                                <a target="_blank" href="https://lhttp.qingting.fm/live/20210755/64k.mp3">星河音乐</a>
-                                <a target="_blank" href="https://lhttp.qingting.fm/live/20500078/64k.mp3">华语音乐</a>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button class="p2">Source</button>
-                            <div class="dropdown-content">
-                                <a target="_blank" href="https://gitee.com/">gitee</a>
-                                <a target="_blank" href="https://github.com/">github</a>
-                                <a target="_blank" href="https://weibo.com/">WeiBo</a>
-                                <a target="_blank" href="https://pim.qq.com/">TenxunPim</a>
-                                <a target="_blank" href="https://docs.qq.com/">TenxunDOC</a>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button class="p1">Disk</button>
-                            <div class="dropdown-content">
-                                <a target="_blank" href="http://pcrock.ys168.com/">ys168</a>
-                                <a target="_blank" href="https://pan.baidu.com/">panBD</a>
-                                <a target="_blank" href="https://photo.baidu.com/photo/web/login">YiKe</a>
-                                <a target="_blank" href="https://wx.qq.com/?lang=zh_CN">WX</a>
-                                <a target="_blank" href="http://live.yj1211.work/">直播聚合</a>
-                                <a target="_blank" href="https://pcrock88.github.io/ctfileGet/">城通网盘</a>
-                            </div>
-                        </div>
-                        <!-- baidu -->
-                        <div style="text-align:center;text-decoration:" none="">
-                            <form target="_blank" action="http://www.baidu.com/baidu">
-                                <input name="tn" type="HIDDEN" value="baidu" />
-                                <a href="http://www.baidu.com/"></a>
-                                <input id="kw" type="text" name="word" size="48" baidusug="1" />
-                                <input type="submit" value="Baidu" />
-                            </form>
-                            <!--Search tips-->
-                            <script charset="gbk" src="http://www.baidu.com/js/opensug.js"></script>
-                        </div>
-                        <!-- VIP -->
-                        <div style="text-align:center;text-decoration:" none="">
-                            <select name="select" id="sel"> </select>
-                            <input type="text" id="url" placeholder="Video address:" />
-                            <select id="open">
-                                <option value="0">NewWindow</option>
-                                <option value="1">ThisWindow</option>
-                            </select>
-                            <button class="pure-button pure-button-primary" onclick="play();">MV Play</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style="text-align:center">
-                <a href="javascript:vod(0);&gt;" <b="" id="show_hide"><img src="favicon.ico" alt="点我" height="5%" style="opacity:0.5" border="0" /></a>
-            </div>
-            </div>
-    <div style="display:none;text-align:center" id="content">
-	    <iframe width="40%" height="32%" scrolling="auto" src="https://pcrock88.github.io/mp3/"></iframe>
-	    <!-- <iframe width="80%" height="50%" scrolling="auto" src="https://ys.lbbb.cc/so.php"></iframe> -->
-	    
-	</div>
+        <!-- 完全移除了原有导航和搜索框，只保留一个干净的空区域 -->
+    </div>
+
+    <!-- 粒子特效脚本 -->
+    <script type="text/javascript" color="255,255,255" opacity="0.5" zindex="-2" count="180" src="/pcrock/pcrock.js"></script>
+    
     <script>
-                <!--https://im1907.top/-->
-                document.getElementById("show_hide").onclick = function() {
-                    var con = document.getElementById("content").style;
-                    if (this.innerHTML == "close") {
-                        con.display = "none";
-                        this.innerHTML = "search";
-                        return false
-                    } else {
-                        con.display = "";
-                        this.innerHTML = "close";
-                        return false
+        // ========== 博客功能 ==========
+        async function loadPosts() {
+            try {
+                const response = await fetch('/posts.json');
+                if (!response.ok) throw new Error('文章加载失败');
+                const posts = await response.json();
+                renderPosts(posts);
+            } catch (error) {
+                document.getElementById('blogContainer').innerHTML = '<div class="no-posts">暂无文章，请在 posts.json 中添加</div>';
+                console.error(error);
+            }
+        }
+
+        function renderPosts(posts) {
+            const container = document.getElementById('blogContainer');
+            if (!posts.length) {
+                container.innerHTML = '<div class="no-posts">暂无文章</div>';
+                return;
+            }
+            container.innerHTML = posts.map(post => `
+                <div class="blog-item">
+                    <a class="blog-title" href="/post.html?id=${post.id}">${post.title}</a>
+                    <span class="blog-date">${post.date}</span>
+                </div>
+            `).join('');
+        }
+
+        // ========== 音乐播放器 ==========
+        let playlist = [];   // [{ name, url }]
+        let currentIndex = 0;
+        let audio = new Audio();
+        let isPlaying = false;
+
+        // 加载播放列表
+        async function loadPlaylist() {
+            try {
+                const response = await fetch('/playlist.txt');
+                const text = await response.text();
+                const lines = text.split('\n');
+                playlist = [];
+                for (let line of lines) {
+                    line = line.trim();
+                    if (line === '') continue;
+                    const [name, url] = line.split(',');
+                    if (name && url) {
+                        playlist.push({ name: name.trim(), url: url.trim() });
                     }
-                };
-            </script>
-<script type="text/javascript" color="255,255,255" opacity="0.5" zindex="-2" count="180" src="/pcrock/pcrock.js"></script>
-<!--播放器
-<div style="position:fixed;top:0;right:0"><audio src="https://lhttp.qingting.fm/live/4804/64k.mp3" controls="controls" /></div>
--->
-</body>
+                }
+                if (playlist.length > 0) {
+                    currentIndex = Math.floor(Math.random() * playlist.length);
+                    loadSong(currentIndex);
+                } else {
+                    document.getElementById('songName').innerText = '无歌曲';
+                }
+            } catch (error) {
+                console.error('播放列表加载失败', error);
+                document.getElementById('songName').innerText = '播放列表缺失';
+            }
+        }
 
-</html>
+        function loadSong(index) {
+            if (playlist.length === 0) return;
+            const song = playlist[index];
+            document.getElementById('songName').innerText = song.name;
+            audio.src = song.url;
+            if (isPlaying) {
+                audio.play().catch(e => console.log('播放失败', e));
+            }
+        }
 
-<!-- html代码测试 
-<div style="text-align:center;text-decoration:" none=""><input name="" type="button"  value="显?代码框"  id="btn" onclick="btn()"></div>
-<div align="center";div style="display: none";div id="box">
-<textarea name="content" id="content" style="width:680px;height:180px;visibility:visible;">
-<html>
-<head>
-    <title>标题</title>
-    <script type="text/javascript" src="引用JS"></script>
-    <link rel="stylesheet" type="text/css" href="引用css">
-</head>
-<body>
-    HTML代码在这
+        function playPause() {
+            if (playlist.length === 0) return;
+            if (isPlaying) {
+                audio.pause();
+                document.getElementById('playBtn').innerHTML = '▶';
+            } else {
+                audio.play().catch(e => console.log('播放失败', e));
+                document.getElementById('playBtn').innerHTML = '⏸';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function nextSong() {
+            if (playlist.length === 0) return;
+            currentIndex = Math.floor(Math.random() * playlist.length);
+            loadSong(currentIndex);
+            if (isPlaying) {
+                audio.play().catch(e => console.log('播放失败', e));
+            }
+            document.getElementById('playBtn').innerHTML = '⏸';
+        }
+
+        function prevSong() {
+            if (playlist.length === 0) return;
+            currentIndex = Math.floor(Math.random() * playlist.length);
+            loadSong(currentIndex);
+            if (isPlaying) {
+                audio.play().catch(e => console.log('播放失败', e));
+            }
+            document.getElementById('playBtn').innerHTML = '⏸';
+        }
+
+        // 绑定事件
+        document.getElementById('playBtn').onclick = playPause;
+        document.getElementById('nextBtn').onclick = nextSong;
+        document.getElementById('prevBtn').onclick = prevSong;
+
+        // 歌曲播放结束后自动随机下一首
+        audio.addEventListener('ended', nextSong);
+
+        // 初始化
+        loadPosts();
+        loadPlaylist();
+    </script>
+    <script>
+        // 你原有的时间显示脚本（保留）
+        setInterval("time.innerHTML = new Date().toLocaleString('chinese',{hour12:false});",1000);
+    </script>
+    <!-- 你原有的右键屏障脚本（保留） -->
+    <script>
+        document.oncontextmenu = new Function("event.returnValue=false;");
+        document.onselectstart = new Function("event.returnValue=false;");
+    </script>
 </body>
 </html>
-</textarea>
-<div style=" text-align:center"><input class="Sub" type="button" name="Submit" value="运行代码" onclick="runCode('content')"/></div>
-</div>
--->
