@@ -6,7 +6,7 @@
 "content": "<p>这是我的第一篇博客文章。欢迎来到 PCROCK 博客！</p><p>你可以在这里写任何内容，支持 <strong>粗体</strong>、<em>斜体</em>、<a href='#'>链接</a> 等 HTML 标签。</p>"
 },
 {
-"id": 1,
+"id": 2,
 "title": ".nojekyll",
 "date": "2026-04-18",
 "content": "在GitHub Pages的根目录下放一个空的 .nojekyll 文件，核心作用就是告诉GitHub：“不要用Jekyll处理我的网站，直接把我上传的文件原样发布。”
