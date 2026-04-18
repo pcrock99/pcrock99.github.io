@@ -1,3 +1,10 @@
-夜曲,https://example.com/song1.mp3
-晴天,https://example.com/song2.mp3
-东风破,https://example.com/song3.mp3
+黑豹-Dont Break My Heart,https://music.163.com/song/media/outer/url?id=357263.mp3
+黑豹-Take Care,https://music.163.com/song/media/outer/url?id=357266.mp3
+黑豹-别来纠缠我,https://freetyst.nf.migu.cn/public/product8th/product39/2020/04/0815/2013年07月25日滚石唱片内容准入66首/标清高清/MP3_128_16_Stero/63378003743152202.mp3
+黑豹-脸谱,https://music.163.com/song/media/outer/url?id=357272.mp3
+黑豹-怕你为自己流泪,https://music.163.com/song/media/outer/url?id=357274.mp3
+黑豹-体会,https://music.163.com/song/media/outer/url?id=357276.mp3
+黑豹-童年,https://music.163.com/song/media/outer/url?id=28288326.mp3
+黑豹-无地自容,https://music.163.com/song/media/outer/url?id=357279.mp3
+黑豹-兄弟,https://music.163.com/song/media/outer/url?id=29491556.mp3
+黑豹-眼光里,https://music.163.com/song/media/outer/url?id=357280.mp3
