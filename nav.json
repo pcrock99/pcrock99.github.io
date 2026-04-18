@@ -5,8 +5,8 @@
         "target": "_self"
     },
     {
-        "name": "检测",
-        "url": "/check.html",
+        "name": "空位待加",
+        "url": "/",
         "target": "_blank"
     }
 ]
