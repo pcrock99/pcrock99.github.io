@@ -10,13 +10,8 @@
         "target": "_self"
     },
     {
-        "name": "影音",
-        "url": "http://pcrock.hkfree.work/#movie",
+        "name": "3vftp",
+        "url": "http://pcrock.hkfree.work/",
         "target": "_blank"
-    },
-    {
-        "name": "关于",
-        "url": "/about.html",
-        "target": "_self"
     }
 ]
