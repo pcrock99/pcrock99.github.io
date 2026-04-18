@@ -74,6 +74,30 @@
             background: #FFCC33;
             color: #202020;
         }
+        /* 导航栏样式 */
+        .nav-bar {
+            width: 680px;
+            margin: 0 auto 10px;
+            background: rgba(240, 240, 240, 0.95);
+            border-radius: 30px;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        .nav-bar a {
+            color: #202020;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-bar a:hover {
+            background: #FFCC33;
+            color: #202020;
+        }
         /* 调整主面板高度适应内容 */
         .pcrock {
             height: auto;
@@ -85,7 +109,7 @@
 </head>
 <body bgcolor="#404040">
     <div style="text-align:center">
-        <!-- 时间字体颜色已改为白色 -->
+        <!-- 时间字体颜色白色 -->
         <div id="time" style="color:#FFFFFF;font-size:28px;margin-top:10px"></div>
         
         <!-- 音乐播放器 - 三个按钮窄版 -->
@@ -95,6 +119,11 @@
             <button id="nextBtn">⏭</button>
         </div>
 
+        <!-- 导航栏 - 动态加载 -->
+        <div id="navBar" class="nav-bar">
+            <span style="color:#606060">加载导航...</span>
+        </div>
+
         <div class="pcrock">
             <a target="_blank" href="http://pcrock.hkfree.work/"><h1>PCROCK</h1></a>
             <!-- 博客文章列表容器 -->
@@ -102,14 +131,32 @@
                 <div class="no-posts">加载文章中...</div>
             </div>
         </div>
-
-        <!-- 完全移除了原有导航和搜索框 -->
     </div>
 
     <!-- 粒子特效脚本 -->
     <script type="text/javascript" color="255,255,255" opacity="0.5" zindex="-2" count="180" src="/pcrock/pcrock.js"></script>
     
     <script>
+        // ========== 导航栏加载 ==========
+        async function loadNav() {
+            try {
+                const response = await fetch('/nav.json');
+                if (!response.ok) throw new Error('导航加载失败');
+                const navItems = await response.json();
+                const navBar = document.getElementById('navBar');
+                if (navItems.length === 0) {
+                    navBar.innerHTML = '';
+                    return;
+                }
+                navBar.innerHTML = navItems.map(item => 
+                    `<a href="${item.url}" target="${item.target}">${item.name}</a>`
+                ).join('');
+            } catch (error) {
+                console.error('导航加载失败', error);
+                document.getElementById('navBar').innerHTML = '<span style="color:#606060">导航加载失败</span>';
+            }
+        }
+
         // ========== 博客功能 ==========
         async function loadPosts() {
             try {
@@ -129,6 +176,8 @@
                 container.innerHTML = '<div class="no-posts">暂无文章</div>';
                 return;
             }
+            // 按日期倒序排列（最新文章在前）
+            posts.sort((a, b) => new Date(b.date) - new Date(a.date));
             container.innerHTML = posts.map(post => `
                 <div class="blog-item">
                     <a class="blog-title" href="/post.html?id=${post.id}">${post.title}</a>
@@ -138,12 +187,11 @@
         }
 
         // ========== 音乐播放器 ==========
-        let playlist = [];   // [{ name, url }]
+        let playlist = [];
         let currentIndex = 0;
         let audio = new Audio();
         let isPlaying = false;
 
-        // 加载播放列表
         async function loadPlaylist() {
             try {
                 const response = await fetch('/playlist.txt');
@@ -169,8 +217,7 @@
 
         function loadSong(index) {
             if (playlist.length === 0) return;
-            const song = playlist[index];
-            audio.src = song.url;
+            audio.src = playlist[index].url;
             if (isPlaying) {
                 audio.play().catch(e => console.log('播放失败', e));
             }
@@ -208,23 +255,19 @@
             document.getElementById('playBtn').innerHTML = '⏸';
         }
 
-        // 绑定事件
         document.getElementById('playBtn').onclick = playPause;
         document.getElementById('nextBtn').onclick = nextSong;
         document.getElementById('prevBtn').onclick = prevSong;
-
-        // 歌曲播放结束后自动随机下一首
         audio.addEventListener('ended', nextSong);
 
-        // 初始化
+        // 初始化所有
+        loadNav();
         loadPosts();
         loadPlaylist();
     </script>
     <script>
-        // 时间显示
         setInterval("time.innerHTML = new Date().toLocaleString('chinese',{hour12:false});",1000);
     </script>
-    <!-- 右键屏障 -->
     <script>
         document.oncontextmenu = new Function("event.returnValue=false;");
         document.onselectstart = new Function("event.returnValue=false;");
