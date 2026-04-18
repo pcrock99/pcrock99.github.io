@@ -71,6 +71,11 @@
             text-align: center;
             padding: 40px;
         }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #606060;
+        }
         @media (max-width: 600px) {
             .container {
                 width: 95%;
@@ -84,40 +89,48 @@
             }
         }
     </style>
-    <!-- 引入 marked.js 解析 Markdown -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="container">
         <div id="post-title" class="post-title">加载中...</div>
-        <div id="post-content" class="post-content">正在读取文章...</div>
+        <div id="post-content" class="post-content loading">正在加载文章...</div>
         <a href="index.html" class="back-link">← 返回首页</a>
     </div>
 
     <script>
+        // 获取 URL 中的 id 参数
         const urlParams = new URLSearchParams(window.location.search);
-        const filePath = urlParams.get('file');
-        const postTitle = urlParams.get('title');
+        const postId = urlParams.get('id');
 
-        if (!filePath) {
+        if (!postId) {
             document.getElementById('post-title').innerText = '错误';
-            document.getElementById('post-content').innerHTML = '<div class="error">文章地址无效</div>';
+            document.getElementById('post-content').innerHTML = '<div class="error">文章地址无效，缺少 id 参数</div>';
         } else {
-            document.title = postTitle + ' - PCROCK';
-            document.getElementById('post-title').innerText = postTitle;
-            
-            fetch(filePath)
+            // 从 posts.json 加载文章数据
+            fetch('/posts.json')
                 .then(response => {
-                    if (!response.ok) throw new Error('文章不存在');
-                    return response.text();
+                    if (!response.ok) throw new Error('无法加载 posts.json');
+                    return response.json();
                 })
-                .then(markdown => {
-                    const html = marked.parse(markdown);
-                    document.getElementById('post-content').innerHTML = html;
+                .then(posts => {
+                    // 根据 id 查找文章（注意 id 可能是字符串或数字）
+                    const post = posts.find(p => p.id == postId);
+                    
+                    if (!post) {
+                        document.getElementById('post-title').innerText = '未找到';
+                        document.getElementById('post-content').innerHTML = '<div class="error">未找到 id 为 ' + postId + ' 的文章</div>';
+                        return;
+                    }
+                    
+                    // 显示文章
+                    document.title = post.title + ' - PCROCK';
+                    document.getElementById('post-title').innerText = post.title;
+                    document.getElementById('post-content').innerHTML = post.content;
                 })
                 .catch(error => {
-                    document.getElementById('post-content').innerHTML = '<div class="error">文章加载失败，请检查文件路径</div>';
-                    console.error(error);
+                    console.error('加载文章失败:', error);
+                    document.getElementById('post-title').innerText = '错误';
+                    document.getElementById('post-content').innerHTML = '<div class="error">加载文章失败，请检查网络或 posts.json 文件</div>';
                 });
         }
     </script>
