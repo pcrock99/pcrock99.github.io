@@ -1,98 +1,240 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PCROCK 博客</title>
+    <title>PCROCK BLOG</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/pcrock/pcrock.css" />
+    <link rel="shortcut icon" href="favicon.ico" />
     <style>
-        body {
-            background: #404040;
-            font-family: system-ui, -apple-system, sans-serif;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #f0f0f0;
+        /* 博客列表样式 */
+        .blog-list {
+            width: 680px;
+            margin: 20px auto;
+            background: rgba(240, 240, 240, 0.95);
             border-radius: 30px;
-            padding: 20px;
+            padding: 20px 0;
+            text-align: left;
         }
-        h1 {
-            text-align: center;
-            color: #202020;
-        }
-        .post-list {
-            list-style: none;
-            padding: 0;
-        }
-        .post-list li {
+        .blog-item {
+            padding: 12px 30px;
             border-bottom: 1px solid #ccc;
-            padding: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .post-list a {
-            text-decoration: none;
+        .blog-item:last-child {
+            border-bottom: none;
+        }
+        .blog-title {
             font-size: 18px;
             color: #202020;
+            text-decoration: none;
             font-weight: bold;
         }
-        .post-list a:hover {
+        .blog-title:hover {
             color: #FFCC33;
+            text-decoration: underline;
         }
-        .post-date {
-            float: right;
-            color: #606060;
+        .blog-date {
             font-size: 14px;
+            color: #606060;
         }
-        .loading {
+        .no-posts {
             text-align: center;
             padding: 40px;
             color: #606060;
         }
+        /* 播放器样式 */
+        .music-player {
+            width: 680px;
+            margin: 10px auto 20px;
+            background: rgba(200, 200, 200, 0.8);
+            border-radius: 40px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .music-player button {
+            background: #404040;
+            color: white;
+            border: none;
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .music-player button:hover {
+            background: #FFCC33;
+            color: #202020;
+        }
+        .music-player .song-name {
+            font-size: 14px;
+            color: #202020;
+            min-width: 180px;
+            text-align: center;
+        }
+        /* 调整主面板高度适应内容 */
+        .pcrock {
+            height: auto;
+            min-height: 240px;
+            border-radius: 30px;
+            padding: 15px 0;
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>PCROCK 博客</h1>
-        <div id="time" style="text-align:center;font-size:20px;margin-bottom:20px"></div>
-        <div id="posts-container" class="loading">加载文章列表中...</div>
+<body bgcolor="#404040">
+    <div style="text-align:center">
+        <div id="time" style="color:#000000;font-size:28px;margin-top:10px"></div>
+        
+        <!-- 音乐播放器 -->
+        <div class="music-player">
+            <button id="prevBtn">⏮</button>
+            <button id="playBtn">▶</button>
+            <button id="nextBtn">⏭</button>
+            <span class="song-name" id="songName">未播放</span>
+        </div>
+
+        <div class="pcrock">
+            <a target="_blank" href="http://pcrock.hkfree.work/"><h1>PCROCK</h1></a>
+            <!-- 博客文章列表容器 -->
+            <div id="blogContainer" class="blog-list">
+                <div class="no-posts">加载文章中...</div>
+            </div>
+        </div>
+
+        <!-- 完全移除了原有导航和搜索框，只保留一个干净的空区域 -->
     </div>
 
+    <!-- 粒子特效脚本 -->
+    <script type="text/javascript" color="255,255,255" opacity="0.5" zindex="-2" count="180" src="/pcrock/pcrock.js"></script>
+    
     <script>
-        // 显示时间
-        setInterval(() => {
-            document.getElementById('time').innerText = new Date().toLocaleString('zh-CN');
-        }, 1000);
-
-        // 文章列表配置 —— 每次新增文章，在这里加一条记录
-        const posts = [
-{ file: "_posts/2026-04-18-第一篇文章.md", title: "第一篇文章", date: "2026-04-18" },
-            { file: "_posts/2026-04-18-第一篇文章.md", title: "第一篇文章", date: "2026-04-18" },
-            { file: "_posts/2026-04-17-第二篇文章.md", title: "第二篇文章", date: "2026-04-17" }
-            // ⬆️ 新增文章时，复制上面一行，修改文件名、标题、日期即可
-        ];
-
-        // 渲染文章列表
-        const container = document.getElementById('posts-container');
-        if (posts.length === 0) {
-            container.innerHTML = '<div class="loading">暂无文章</div>';
-        } else {
-            const list = document.createElement('ul');
-            list.className = 'post-list';
-            posts.forEach(post => {
-                const li = document.createElement('li');
-                const link = document.createElement('a');
-                link.href = `post.html?file=${encodeURIComponent(post.file)}&title=${encodeURIComponent(post.title)}`;
-                link.innerText = post.title;
-                const dateSpan = document.createElement('span');
-                dateSpan.className = 'post-date';
-                dateSpan.innerText = post.date;
-                li.appendChild(link);
-                li.appendChild(dateSpan);
-                list.appendChild(li);
-            });
-            container.innerHTML = '';
-            container.appendChild(list);
+        // ========== 博客功能 ==========
+        async function loadPosts() {
+            try {
+                const response = await fetch('/posts.json');
+                if (!response.ok) throw new Error('文章加载失败');
+                const posts = await response.json();
+                renderPosts(posts);
+            } catch (error) {
+                document.getElementById('blogContainer').innerHTML = '<div class="no-posts">暂无文章，请在 posts.json 中添加</div>';
+                console.error(error);
+            }
         }
+
+        function renderPosts(posts) {
+            const container = document.getElementById('blogContainer');
+            if (!posts.length) {
+                container.innerHTML = '<div class="no-posts">暂无文章</div>';
+                return;
+            }
+            container.innerHTML = posts.map(post => `
+                <div class="blog-item">
+                    <a class="blog-title" href="/post.html?id=${post.id}">${post.title}</a>
+                    <span class="blog-date">${post.date}</span>
+                </div>
+            `).join('');
+        }
+
+        // ========== 音乐播放器 ==========
+        let playlist = [];   // [{ name, url }]
+        let currentIndex = 0;
+        let audio = new Audio();
+        let isPlaying = false;
+
+        // 加载播放列表
+        async function loadPlaylist() {
+            try {
+                const response = await fetch('/playlist.txt');
+                const text = await response.text();
+                const lines = text.split('\n');
+                playlist = [];
+                for (let line of lines) {
+                    line = line.trim();
+                    if (line === '') continue;
+                    const [name, url] = line.split(',');
+                    if (name && url) {
+                        playlist.push({ name: name.trim(), url: url.trim() });
+                    }
+                }
+                if (playlist.length > 0) {
+                    currentIndex = Math.floor(Math.random() * playlist.length);
+                    loadSong(currentIndex);
+                } else {
+                    document.getElementById('songName').innerText = '无歌曲';
+                }
+            } catch (error) {
+                console.error('播放列表加载失败', error);
+                document.getElementById('songName').innerText = '播放列表缺失';
+            }
+        }
+
+        function loadSong(index) {
+            if (playlist.length === 0) return;
+            const song = playlist[index];
+            document.getElementById('songName').innerText = song.name;
+            audio.src = song.url;
+            if (isPlaying) {
+                audio.play().catch(e => console.log('播放失败', e));
+            }
+        }
+
+        function playPause() {
+            if (playlist.length === 0) return;
+            if (isPlaying) {
+                audio.pause();
+                document.getElementById('playBtn').innerHTML = '▶';
+            } else {
+                audio.play().catch(e => console.log('播放失败', e));
+                document.getElementById('playBtn').innerHTML = '⏸';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function nextSong() {
+            if (playlist.length === 0) return;
+            currentIndex = Math.floor(Math.random() * playlist.length);
+            loadSong(currentIndex);
+            if (isPlaying) {
+                audio.play().catch(e => console.log('播放失败', e));
+            }
+            document.getElementById('playBtn').innerHTML = '⏸';
+        }
+
+        function prevSong() {
+            if (playlist.length === 0) return;
+            currentIndex = Math.floor(Math.random() * playlist.length);
+            loadSong(currentIndex);
+            if (isPlaying) {
+                audio.play().catch(e => console.log('播放失败', e));
+            }
+            document.getElementById('playBtn').innerHTML = '⏸';
+        }
+
+        // 绑定事件
+        document.getElementById('playBtn').onclick = playPause;
+        document.getElementById('nextBtn').onclick = nextSong;
+        document.getElementById('prevBtn').onclick = prevSong;
+
+        // 歌曲播放结束后自动随机下一首
+        audio.addEventListener('ended', nextSong);
+
+        // 初始化
+        loadPosts();
+        loadPlaylist();
+    </script>
+    <script>
+        // 你原有的时间显示脚本（保留）
+        setInterval("time.innerHTML = new Date().toLocaleString('chinese',{hour12:false});",1000);
+    </script>
+    <!-- 你原有的右键屏障脚本（保留） -->
+    <script>
+        document.oncontextmenu = new Function("event.returnValue=false;");
+        document.onselectstart = new Function("event.returnValue=false;");
     </script>
 </body>
 </html>
