@@ -7,11 +7,6 @@
     {
         "name": "博客",
         "url": "/bg",
-        "target": "_self"
-    },
-    {
-        "name": "3vftp",
-        "url": "http://pcrock.hkfree.work/",
         "target": "_blank"
     }
 ]
