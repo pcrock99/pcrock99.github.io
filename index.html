@@ -44,13 +44,14 @@
             padding: 40px;
             color: #606060;
         }
-        /* 播放器样式 - 窄版三按钮 */
+        /* 播放器样式 - 窄版三按钮 + 歌名 */
         .music-player {
-            width: 140px;
+            width: auto;
+            max-width: 300px;
             margin: 10px auto;
             background: rgba(200, 200, 200, 0.8);
             border-radius: 40px;
-            padding: 6px 12px;
+            padding: 6px 16px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -73,6 +74,14 @@
         .music-player button:hover {
             background: #FFCC33;
             color: #202020;
+        }
+        .music-player .song-name {
+            font-size: 13px;
+            color: #202020;
+            max-width: 120px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         /* 导航栏样式 */
         .nav-bar {
@@ -127,11 +136,12 @@
         <!-- 时间字体颜色白色 -->
         <div id="time" style="color:#FFFFFF;font-size:28px;margin-top:10px"></div>
         
-        <!-- 音乐播放器 - 三个按钮窄版 -->
+        <!-- 音乐播放器 - 三个按钮 + 歌名 -->
         <div class="music-player">
             <button id="prevBtn">⏮</button>
             <button id="playBtn">▶</button>
             <button id="nextBtn">⏭</button>
+            <span class="song-name" id="songName">未播放</span>
         </div>
 
         <!-- 导航栏 - 动态加载 -->
@@ -229,15 +239,20 @@
                 if (playlist.length > 0) {
                     currentIndex = Math.floor(Math.random() * playlist.length);
                     loadSong(currentIndex);
+                } else {
+                    document.getElementById('songName').innerText = '无歌曲';
                 }
             } catch (error) {
                 console.error('播放列表加载失败', error);
+                document.getElementById('songName').innerText = '列表缺失';
             }
         }
 
         function loadSong(index) {
             if (playlist.length === 0) return;
-            audio.src = playlist[index].url;
+            const song = playlist[index];
+            document.getElementById('songName').innerText = song.name;
+            audio.src = song.url;
             if (isPlaying) {
                 audio.play().catch(e => console.log('播放失败', e));
             }
