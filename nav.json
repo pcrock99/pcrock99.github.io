@@ -5,9 +5,9 @@
         "target": "_self"
     },
     {
-        "name": "工具",
-        "url": "http://pcrock.hkfree.work/#tools",
-        "target": "_blank"
+        "name": "博客",
+        "url": "/bg",
+        "target": "_self"
     },
     {
         "name": "影音",
