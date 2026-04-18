@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title>PCROCK BLOG</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/pcrock/pcrock.css" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <style>
+        /* 博客列表样式 */
+        .blog-list {
+            width: 680px;
+            margin: 20px auto;
+            background: rgba(240, 240, 240, 0.95);
+            border-radius: 30px;
+            padding: 20px 0;
+            text-align: left;
+        }
+        .blog-item {
+            padding: 12px 30px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .blog-item:last-child {
+            border-bottom: none;
+        }
+        .blog-title {
+            font-size: 18px;
+            color: #202020;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .blog-title:hover {
+            color: #FFCC33;
+            text-decoration: underline;
+        }
+        .blog-date {
+            font-size: 14px;
+            color: #606060;
+        }
+        .no-posts {
+            text-align: center;
+            padding: 40px;
+            color: #606060;
+        }
+        /* 播放器样式 - 窄版三按钮 + 歌名 */
+        .music-player {
+            width: auto;
+            max-width: 300px;
+            margin: 10px auto;
+            background: rgba(200, 200, 200, 0.8);
+            border-radius: 40px;
+            padding: 6px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .music-player button {
+            background: #404040;
+            color: white;
+            border: none;
+            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .music-player button:hover {
+            background: #FFCC33;
+            color: #202020;
+        }
+        .music-player .song-name {
+            font-size: 13px;
+            color: #202020;
+            max-width: 120px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        /* 导航栏样式 */
+        .nav-bar {
+            width: 680px;
+            margin: 0 auto 10px;
+            background: rgba(240, 240, 240, 0.95);
+            border-radius: 30px;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        .nav-bar a {
+            color: #202020;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .nav-bar a:hover {
+            background: #FFCC33;
+            color: #202020;
+        }
+        /* 调整主面板高度适应内容 */
+        .pcrock {
+            height: auto;
+            min-height: 240px;
+            border-radius: 30px;
+            padding: 15px 0;
+        }
+        /* 嵌入 bg 页面样式 */
+        .bg-embed {
+            margin: 20px auto;
+            width: 90%;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .bg-embed iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            display: block;
+        }
+        /* ASCII Logo 样式 */
+        .ascii-logo {
+            overflow-x: auto;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .ascii-logo pre {
+            font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+            font-size: 8px;
+            color: #228be6;
+            margin: 0 auto;
+            display: inline-block;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body bgcolor="#404040">
+    <div style="text-align:center">
+        <!-- 时间字体颜色白色 -->
+        <div id="time" style="color:#FFFFFF;font-size:28px;margin-top:10px"></div>
+        
+        <!-- 音乐播放器 - 三个按钮 + 歌名 -->
+        <div class="music-player">
+            <button id="prevBtn">⏮</button>
+            <button id="playBtn">▶</button>
+            <button id="nextBtn">⏭</button>
+            <span class="song-name" id="songName">未播放</span>
+        </div>
+
+        <!-- 导航栏 - 动态加载 -->
+        <div id="navBar" class="nav-bar">
+            <span style="color:#606060">加载导航...</span>
+        </div>
+
+        <div class="pcrock">
+            <!-- ASCII Logo，点击跳转 -->
+            <a target="_blank" href="http://pcrock.hkfree.work/">
+                <div class="ascii-logo">
+                    <pre>
+ _____    _____   _____     ____     _____   _  __ 
+|  _  \  / ____| |  __ \   / __ \   / ____| | |/ / 
+| |_) | | |      | |__) | | |  | | | |      | ' /  
+|  _  / | |      |  _  /  | |  | | | |      |  <   
+| |     | |____  | | \ \  | |__| | | |____  | . \  
+|_|      \_____| |_|  \_\  \____/   \_____| |_|\_\
+                    </pre>
+                </div>
+            </a>
+            
+            <!-- 嵌入 bg 页面 -->
+            <div class="bg-embed">
+                <iframe src="https://pcrock99.github.io/bg" title="BG页面"></iframe>
+            </div>
+            
+            <!-- 博客文章列表容器 -->
+            <div id="blogContainer" class="blog-list">
+                <div class="no-posts">加载文章中...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 粒子特效脚本 -->
+    <script type="text/javascript" color="255,255,255" opacity="0.5" zindex="-2" count="180" src="/pcrock/pcrock.js"></script>
+    
+    <script>
+        // ========== 导航栏加载 ==========
+        async function loadNav() {
+            try {
+                const response = await fetch('/nav.json');
+                if (!response.ok) throw new Error('导航加载失败');
+                const navItems = await response.json();
+                const navBar = document.getElementById('navBar');
+                if (navItems.length === 0) {
+                    navBar.innerHTML = '';
+                    return;
+                }
+                navBar.innerHTML = navItems.map(item => 
+                    `<a href="${item.url}" target="${item.target}">${item.name}</a>`
+                ).join('');
+            } catch (error) {
+                console.error('导航加载失败', error);
+                document.getElementById('navBar').innerHTML = '<span style="color:#606060">导航加载失败</span>';
+            }
+        }
+
+        // ========== 博客文章加载 ==========
+        async function loadPosts() {
+            try {
+                const response = await fetch('/posts.json');
+                if (!response.ok) throw new Error('文章加载失败');
+                const posts = await response.json();
+                renderPosts(posts);
+            } catch (error) {
+                document.getElementById('blogContainer').innerHTML = '<div class="no-posts">暂无文章，请在 posts.json 中添加</div>';
+                console.error(error);
+            }
+        }
+
+        function renderPosts(posts) {
+            const container = document.getElementById('blogContainer');
+            if (!posts.length) {
+                container.innerHTML = '<div class="no-posts">暂无文章</div>';
+                return;
+            }
+            posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+            container.innerHTML = posts.map(post => `
+                <div class="blog-item">
+                    <a class="blog-title" href="/post.html?id=${post.id}">${post.title}</a>
+                    <span class="blog-date">${post.date}</span>
+                </div>
+            `).join('');
+        }
+
+        // ========== 音乐播放器（随机播放 + 失效自动跳过 + 超时控制） ==========
+        let playlist = [];
+        let currentIndex = 0;
+        let audio = new Audio();
+        let isPlaying = false;
+        let isSkipping = false;
+
+        // 加载播放列表
+        async function loadPlaylist() {
+            try {
+                const response = await fetch('/playlist.txt');
+                const text = await response.text();
+                const lines = text.split('\n');
+                playlist = [];
+                for (let line of lines) {
+                    line = line.trim();
+                    if (line === '') continue;
+                    const [name, url] = line.split('$');
+                    if (name && url) {
+                        playlist.push({ name: name.trim(), url: url.trim() });
+                    }
+                }
+                if (playlist.length === 0) {
+                    document.getElementById('songName').innerText = '无歌曲';
+                    return;
+                }
+                // 随机选一首开始
+                currentIndex = Math.floor(Math.random() * playlist.length);
+                tryLoadSong(currentIndex);
+            } catch (error) {
+                console.error('播放列表加载失败', error);
+                document.getElementById('songName').innerText = '列表缺失';
+            }
+        }
+
+        // 检测链接是否有效（带超时）
+        function isLinkReachable(url, timeout = 4000) {
+            return new Promise((resolve) => {
+                const controller = new AbortController();
+                const timer = setTimeout(() => {
+                    controller.abort();
+                    resolve(false);
+                }, timeout);
+
+                fetch(url, { 
+                    method: 'HEAD', 
+                    signal: controller.signal,
+                    mode: 'no-cors'
+                })
+                .then(() => {
+                    clearTimeout(timer);
+                    resolve(true);
+                })
+                .catch(() => {
+                    clearTimeout(timer);
+                    resolve(false);
+                });
+            });
+        }
+
+        // 尝试加载一首歌
+        async function tryLoadSong(index) {
+            if (isSkipping) return;
+            if (playlist.length === 0) return;
+
+            isSkipping = true;
+            if (index >= playlist.length) index = 0;
+            const song = playlist[index];
+            document.getElementById('songName').innerText = '检测中...';
+
+            const isReachable = await isLinkReachable(song.url, 4000);
+
+            if (!isReachable) {
+                console.log(`失效或超时，自动跳过: ${song.name}`);
+                let newIndex = Math.floor(Math.random() * playlist.length);
+                currentIndex = newIndex;
+                isSkipping = false;
+                tryLoadSong(currentIndex);
+                return;
+            }
+
+            document.getElementById('songName').innerText = song.name;
+            audio.src = song.url;
+            isSkipping = false;
+
+            if (isPlaying) {
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => nextSong(true));
+                }
+            }
+        }
+
+        function playPause() {
+            if (playlist.length === 0) return;
+            if (isPlaying) {
+                audio.pause();
+                document.getElementById('playBtn').innerHTML = '▶';
+            } else {
+                audio.play().catch(() => nextSong(true));
+                document.getElementById('playBtn').innerHTML = '⏸';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // 随机下一首
+        function nextSong(autoSkip = false) {
+            if (isSkipping && !autoSkip) return;
+            if (playlist.length === 0) return;
+            
+            let newIndex = Math.floor(Math.random() * playlist.length);
+            currentIndex = newIndex;
+            tryLoadSong(currentIndex);
+        }
+
+        // 随机上一首（也是随机）
+        function prevSong() {
+            if (isSkipping) return;
+            if (playlist.length === 0) return;
+            
+            let newIndex = Math.floor(Math.random() * playlist.length);
+            currentIndex = newIndex;
+            tryLoadSong(currentIndex);
+        }
+
+        // 监听播放结束和错误事件
+        audio.addEventListener('ended', () => nextSong(true));
+        audio.addEventListener('error', () => nextSong(true));
+
+        // 绑定按钮事件
+        document.getElementById('playBtn').onclick = playPause;
+        document.getElementById('nextBtn').onclick = () => nextSong(false);
+        document.getElementById('prevBtn').onclick = prevSong;
+
+        // 初始化所有
+        loadNav();
+        loadPosts();
+        loadPlaylist();
+    </script>
+    <script>
+        setInterval("time.innerHTML = new Date().toLocaleString('chinese',{hour12:false});",1000);
+    </script>
+    <script>
+        document.oncontextmenu = new Function("event.returnValue=false;");
+        document.onselectstart = new Function("event.returnValue=false;");
+    </script>
+</body>
+</html>
