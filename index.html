@@ -44,38 +44,35 @@
             padding: 40px;
             color: #606060;
         }
-        /* 播放器样式 */
+        /* 播放器样式 - 窄版三按钮 */
         .music-player {
-            width: 680px;
-            margin: 10px auto 20px;
+            width: 140px;
+            margin: 10px auto;
             background: rgba(200, 200, 200, 0.8);
             border-radius: 40px;
-            padding: 8px 20px;
+            padding: 6px 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 12px;
         }
         .music-player button {
             background: #404040;
             color: white;
             border: none;
-            font-size: 20px;
-            width: 40px;
-            height: 40px;
+            font-size: 18px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .music-player button:hover {
             background: #FFCC33;
             color: #202020;
-        }
-        .music-player .song-name {
-            font-size: 14px;
-            color: #202020;
-            min-width: 180px;
-            text-align: center;
         }
         /* 调整主面板高度适应内容 */
         .pcrock {
@@ -90,12 +87,11 @@
     <div style="text-align:center">
         <div id="time" style="color:#000000;font-size:28px;margin-top:10px"></div>
         
-        <!-- 音乐播放器 -->
+        <!-- 音乐播放器 - 三个按钮窄版 -->
         <div class="music-player">
             <button id="prevBtn">⏮</button>
             <button id="playBtn">▶</button>
             <button id="nextBtn">⏭</button>
-            <span class="song-name" id="songName">未播放</span>
         </div>
 
         <div class="pcrock">
@@ -106,7 +102,7 @@
             </div>
         </div>
 
-        <!-- 完全移除了原有导航和搜索框，只保留一个干净的空区域 -->
+        <!-- 完全移除了原有导航和搜索框 -->
     </div>
 
     <!-- 粒子特效脚本 -->
@@ -164,19 +160,15 @@
                 if (playlist.length > 0) {
                     currentIndex = Math.floor(Math.random() * playlist.length);
                     loadSong(currentIndex);
-                } else {
-                    document.getElementById('songName').innerText = '无歌曲';
                 }
             } catch (error) {
                 console.error('播放列表加载失败', error);
-                document.getElementById('songName').innerText = '播放列表缺失';
             }
         }
 
         function loadSong(index) {
             if (playlist.length === 0) return;
             const song = playlist[index];
-            document.getElementById('songName').innerText = song.name;
             audio.src = song.url;
             if (isPlaying) {
                 audio.play().catch(e => console.log('播放失败', e));
@@ -228,10 +220,10 @@
         loadPlaylist();
     </script>
     <script>
-        // 你原有的时间显示脚本（保留）
+        // 时间显示
         setInterval("time.innerHTML = new Date().toLocaleString('chinese',{hour12:false});",1000);
     </script>
-    <!-- 你原有的右键屏障脚本（保留） -->
+    <!-- 右键屏障 -->
     <script>
         document.oncontextmenu = new Function("event.returnValue=false;");
         document.onselectstart = new Function("event.returnValue=false;");
