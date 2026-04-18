@@ -129,19 +129,21 @@
             border: none;
             display: block;
         }
-        /* Logo 和时间容器 - 并排，底对齐 */
+        /* Logo 和时间容器 - 左右分布 */
         .logo-time-container {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: flex-end;
-            gap: 20px;
+            width: 90%;
+            max-width: 800px;
             margin: 10px auto 5px;
-            flex-wrap: wrap;
+            gap: 20px;
         }
-        /* ASCII Logo 样式 - 白色 */
+        /* ASCII Logo 样式 - 白色，左对齐 */
         .ascii-logo {
             overflow-x: auto;
-            text-align: center;
+            text-align: left;
+            flex-shrink: 1;
         }
         .ascii-logo pre {
             font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
@@ -151,22 +153,27 @@
             display: inline-block;
             line-height: 1.2;
         }
-        /* 时间样式 - 白色，底对齐 */
+        /* 时间样式 - 白色，右对齐 */
         .time-display {
             color: #FFFFFF;
             font-size: 28px;
             white-space: nowrap;
             line-height: 1;
             padding-bottom: 2px;
+            flex-shrink: 0;
         }
         /* 响应式：手机窄屏时上下排列 */
         @media (max-width: 600px) {
             .logo-time-container {
                 flex-direction: column;
-                align-items: center;
+                align-items: stretch;
                 gap: 5px;
             }
+            .ascii-logo {
+                text-align: center;
+            }
             .time-display {
+                text-align: center;
                 font-size: 24px;
             }
         }
@@ -174,7 +181,7 @@
 </head>
 <body bgcolor="#404040">
     <div style="text-align:center">
-        <!-- Logo 和时间并排，底对齐 -->
+        <!-- Logo 左对齐，时间右对齐 -->
         <div class="logo-time-container">
             <!-- ASCII Logo -->
             <a target="_blank" href="http://pcrock.hkfree.work/">
