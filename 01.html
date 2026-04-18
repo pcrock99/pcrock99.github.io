@@ -129,16 +129,16 @@
             border: none;
             display: block;
         }
-        /* ASCII Logo 样式 */
+        /* ASCII Logo 样式 - 白色，放在时间上方 */
         .ascii-logo {
             overflow-x: auto;
             text-align: center;
-            margin: 10px 0;
+            margin: 10px auto 5px;
         }
         .ascii-logo pre {
             font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
             font-size: 8px;
-            color: #228be6;
+            color: #FFFFFF;
             margin: 0 auto;
             display: inline-block;
             line-height: 1.2;
@@ -147,8 +147,22 @@
 </head>
 <body bgcolor="#404040">
     <div style="text-align:center">
+        <!-- ASCII Logo - 白色，放在时间上方 -->
+        <a target="_blank" href="http://pcrock.hkfree.work/">
+            <div class="ascii-logo">
+                <pre>
+ _____    _____   _____     ____     _____   _  __ 
+|  _  \  / ____| |  __ \   / __ \   / ____| | |/ / 
+| |_) | | |      | |__) | | |  | | | |      | ' /  
+|  _  / | |      |  _  /  | |  | | | |      |  <   
+| |     | |____  | | \ \  | |__| | | |____  | . \  
+|_|      \_____| |_|  \_\  \____/   \_____| |_|\_\
+                </pre>
+            </div>
+        </a>
+        
         <!-- 时间字体颜色白色 -->
-        <div id="time" style="color:#FFFFFF;font-size:28px;margin-top:10px"></div>
+        <div id="time" style="color:#FFFFFF;font-size:28px;margin-top:5px"></div>
         
         <!-- 音乐播放器 - 三个按钮 + 歌名 -->
         <div class="music-player">
@@ -164,20 +178,6 @@
         </div>
 
         <div class="pcrock">
-            <!-- ASCII Logo，点击跳转 -->
-            <a target="_blank" href="http://pcrock.hkfree.work/">
-                <div class="ascii-logo">
-                    <pre>
- _____    _____   _____     ____     _____   _  __ 
-|  _  \  / ____| |  __ \   / __ \   / ____| | |/ / 
-| |_) | | |      | |__) | | |  | | | |      | ' /  
-|  _  / | |      |  _  /  | |  | | | |      |  <   
-| |     | |____  | | \ \  | |__| | | |____  | . \  
-|_|      \_____| |_|  \_\  \____/   \_____| |_|\_\
-                    </pre>
-                </div>
-            </a>
-            
             <!-- 嵌入 bg 页面 -->
             <div class="bg-embed">
                 <iframe src="https://pcrock99.github.io/bg" title="BG页面"></iframe>
