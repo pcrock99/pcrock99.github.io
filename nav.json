@@ -1,12 +1,12 @@
 [
     {
         "name": "首页",
-        "url": "/#首页",
+        "url": "/",
         "target": "_self"
     },
     {
-        "name": "博客",
-        "url": "/bg#博客",
+        "name": "检测",
+        "url": "/check.html",
         "target": "_blank"
     }
 ]
