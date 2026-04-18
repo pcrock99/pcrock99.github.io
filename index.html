@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-    <title>PCROCK</title>
+    <title>PCROCK BLOG</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" media="screen" href="/pcrock/pcrock.css" />
     <link rel="shortcut icon" href="favicon.ico" />
@@ -167,7 +167,7 @@
     <!-- 粒子特效脚本 -->
     <script type="text/javascript" color="255,255,255" opacity="0.5" zindex="-2" count="180" src="/pcrock/pcrock.js"></script>
     
-<script>
+    <script>
         // ========== 导航栏加载 ==========
         async function loadNav() {
             try {
@@ -216,12 +216,12 @@
             `).join('');
         }
 
-        // ========== 音乐播放器（带超时控制的自动跳过） ==========
+        // ========== 音乐播放器（随机播放 + 失效自动跳过 + 超时控制） ==========
         let playlist = [];
         let currentIndex = 0;
         let audio = new Audio();
         let isPlaying = false;
-        let isSkipping = false;  // 防止重复跳过
+        let isSkipping = false;
 
         // 加载播放列表
         async function loadPlaylist() {
@@ -252,58 +252,51 @@
         }
 
         // 检测链接是否有效（带超时）
-        function isLinkReachable(url, timeout = 3000) {
+        function isLinkReachable(url, timeout = 4000) {
             return new Promise((resolve) => {
                 const controller = new AbortController();
                 const timer = setTimeout(() => {
                     controller.abort();
-                    resolve(false); // 超时，判定为失效
+                    resolve(false);
                 }, timeout);
 
                 fetch(url, { 
                     method: 'HEAD', 
                     signal: controller.signal,
-                    mode: 'no-cors' // 尝试避免跨域问题，但可能影响状态码判断
+                    mode: 'no-cors'
                 })
-                .then(response => {
+                .then(() => {
                     clearTimeout(timer);
-                    // no-cors 模式下 response.ok 可能不可靠，但能连上通常就算成功
                     resolve(true);
                 })
-                .catch(error => {
+                .catch(() => {
                     clearTimeout(timer);
-                    console.warn(`链接检测失败: ${url}`, error.message);
                     resolve(false);
                 });
             });
         }
 
-        // 尝试加载一首歌，如果失效则自动下一首
+        // 尝试加载一首歌
         async function tryLoadSong(index) {
             if (isSkipping) return;
             if (playlist.length === 0) return;
 
             isSkipping = true;
-            // 确保 index 有效
             if (index >= playlist.length) index = 0;
             const song = playlist[index];
             document.getElementById('songName').innerText = '检测中...';
 
-            // 1. 检测链接是否可达
-            const isReachable = await isLinkReachable(song.url, 4000); // 4秒超时
+            const isReachable = await isLinkReachable(song.url, 4000);
 
             if (!isReachable) {
-                console.log(`链接失效或超时，自动跳过: ${song.name}`);
-                // 当前歌无效，播下一首
-                let nextIndex = (index + 1) % playlist.length;
-                if (nextIndex === index && playlist.length > 1) nextIndex = (index + 2) % playlist.length;
-                currentIndex = nextIndex;
+                console.log(`失效或超时，自动跳过: ${song.name}`);
+                let newIndex = Math.floor(Math.random() * playlist.length);
+                currentIndex = newIndex;
                 isSkipping = false;
                 tryLoadSong(currentIndex);
                 return;
             }
 
-            // 2. 链接可达，尝试加载播放
             document.getElementById('songName').innerText = song.name;
             audio.src = song.url;
             isSkipping = false;
@@ -311,11 +304,7 @@
             if (isPlaying) {
                 const playPromise = audio.play();
                 if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.error(`播放失败: ${song.name}`, error);
-                        // 播放失败，也自动跳过
-                        nextSong(true);
-                    });
+                    playPromise.catch(() => nextSong(true));
                 }
             }
         }
@@ -326,42 +315,35 @@
                 audio.pause();
                 document.getElementById('playBtn').innerHTML = '▶';
             } else {
-                audio.play().catch(e => {
-                    console.error('播放失败，尝试下一首', e);
-                    nextSong(true);
-                });
+                audio.play().catch(() => nextSong(true));
                 document.getElementById('playBtn').innerHTML = '⏸';
             }
             isPlaying = !isPlaying;
         }
 
+        // 随机下一首
         function nextSong(autoSkip = false) {
             if (isSkipping && !autoSkip) return;
             if (playlist.length === 0) return;
-
-            let newIndex = (currentIndex + 1) % playlist.length;
-            // 如果只剩一首，就重复它
-            if (newIndex === currentIndex && playlist.length === 1) {
-                // 重试当前歌曲
-                tryLoadSong(currentIndex);
-                return;
-            }
+            
+            let newIndex = Math.floor(Math.random() * playlist.length);
             currentIndex = newIndex;
             tryLoadSong(currentIndex);
         }
 
+        // 随机上一首（也是随机）
         function prevSong() {
             if (isSkipping) return;
             if (playlist.length === 0) return;
-            let newIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+            
+            let newIndex = Math.floor(Math.random() * playlist.length);
             currentIndex = newIndex;
             tryLoadSong(currentIndex);
         }
 
-        // 监听播放结束事件
-        audio.addEventListener('ended', () => {
-            nextSong(true);
-        });
+        // 监听播放结束和错误事件
+        audio.addEventListener('ended', () => nextSong(true));
+        audio.addEventListener('error', () => nextSong(true));
 
         // 绑定按钮事件
         document.getElementById('playBtn').onclick = playPause;
