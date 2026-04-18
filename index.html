@@ -231,7 +231,7 @@
                 for (let line of lines) {
                     line = line.trim();
                     if (line === '') continue;
-                    const [name, url] = line.split(',');
+                    const [name, url] = line.split('$');
                     if (name && url) {
                         playlist.push({ name: name.trim(), url: url.trim() });
                     }
