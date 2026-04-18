@@ -1,7 +1,12 @@
 [
-[
-    { "name": "首页", "url": "/", "target": "_self" },
-    { "name": "博客", "url": "/bg", "target": "_self" },
-    { "name": "外部链接", "url": "https://example.com", "target": "_blank" }
-]
+    {
+        "name": "首页",
+        "url": "/#首页",
+        "target": "_self"
+    },
+    {
+        "name": "博客",
+        "url": "/bg#博客",
+        "target": "_blank"
+    }
 ]
