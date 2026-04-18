@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-    <title>PCROCK BLOG</title>
+    <title>PCROCK</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" media="screen" href="/pcrock/pcrock.css" />
     <link rel="shortcut icon" href="favicon.ico" />
@@ -44,13 +44,10 @@
             padding: 40px;
             color: #606060;
         }
-        /* 播放器样式 - 窄版三按钮 + 歌名 */
+        /* 播放器样式 - 无背景白框，歌名白色完整显示 */
         .music-player {
             width: auto;
-            max-width: 300px;
             margin: 10px auto;
-            background: rgba(200, 200, 200, 0.8);
-            border-radius: 40px;
             padding: 6px 16px;
             display: flex;
             align-items: center;
@@ -76,12 +73,9 @@
             color: #202020;
         }
         .music-player .song-name {
-            font-size: 13px;
-            color: #202020;
-            max-width: 120px;
-            overflow: hidden;
+            font-size: 16px;
+            color: #FFFFFF;
             white-space: nowrap;
-            text-overflow: ellipsis;
         }
         /* 导航栏样式 */
         .nav-bar {
@@ -129,16 +123,85 @@
             border: none;
             display: block;
         }
+        /* Logo 和时间容器 - 左右分布 */
+        .logo-time-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 90%;
+            max-width: 800px;
+            margin: 10px auto 5px;
+            gap: 20px;
+        }
+        /* ASCII Logo 样式 - 白色，左对齐 */
+        .ascii-logo {
+            overflow-x: auto;
+            text-align: left;
+            flex-shrink: 1;
+        }
+        .ascii-logo pre {
+            font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+            font-size: 16px;
+            color: #FFFFFF;
+            margin: 0;
+            display: inline-block;
+            line-height: 1.2;
+        }
+        /* 时间样式 - 白色，右对齐 */
+        .time-display {
+            color: #FFFFFF;
+            font-size: 18px;
+            white-space: nowrap;
+            line-height: 1;
+            padding-bottom: 2px;
+            flex-shrink: 0;
+        }
+        /* 响应式：手机窄屏时上下排列 */
+        @media (max-width: 600px) {
+            .logo-time-container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 5px;
+            }
+            .ascii-logo {
+                text-align: center;
+            }
+            .time-display {
+                text-align: center;
+                font-size: 24px;
+            }
+            .music-player .song-name {
+                font-size: 14px;
+                white-space: normal;
+                word-break: keep-all;
+            }
+        }
     </style>
 </head>
 <body bgcolor="#404040">
     <div style="text-align:center">
-        <!-- 时间字体颜色白色 -->
-        <div id="time" style="color:#FFFFFF;font-size:28px;margin-top:10px"></div>
+        <!-- Logo 左对齐，时间右对齐 -->
+        <div class="logo-time-container">
+            <!-- ASCII Logo -->
+            <a target="_blank" href="http://pcrock.hkfree.work/">
+                <div class="ascii-logo">
+                    <pre>
+ _____    _____   _____     ____     _____   _  __ 
+|  _  \  / ____| |  __ \   / __ \   / ____| | |/ / 
+| |_) | | |      | |__) | | |  | | | |      | ' /  
+|  _  / | |      |  _  /  | |  | | | |      |  <   
+| |     | |____  | | \ \  | |__| | | |____  | . \  
+|_|      \_____| |_|  \_\  \____/   \_____| |_|\_\
+                    </pre>
+                </div>
+            </a>
+            
+            <!-- 时间 -->
+            <div id="time" class="time-display"></div>
+        </div>
         
-        <!-- 音乐播放器 - 三个按钮 + 歌名 -->
+        <!-- 音乐播放器 - 无背景，歌名白色 -->
         <div class="music-player">
-            <button id="prevBtn">⏮</button>
             <button id="playBtn">▶</button>
             <button id="nextBtn">⏭</button>
             <span class="song-name" id="songName">未播放</span>
@@ -150,8 +213,6 @@
         </div>
 
         <div class="pcrock">
-            <a target="_blank" href="http://pcrock.hkfree.work/"><h1>PCROCK</h1></a>
-            
             <!-- 嵌入 bg 页面 -->
             <div class="bg-embed">
                 <iframe src="https://pcrock99.github.io/bg" title="BG页面"></iframe>
@@ -216,7 +277,7 @@
             `).join('');
         }
 
-        // ========== 音乐播放器（随机播放 + 失效自动跳过 + 超时控制） ==========
+        // ========== 音乐播放器（随机播放 + 失效自动跳过 + 超时控制，无上一首） ==========
         let playlist = [];
         let currentIndex = 0;
         let audio = new Audio();
@@ -331,16 +392,6 @@
             tryLoadSong(currentIndex);
         }
 
-        // 随机上一首（也是随机）
-        function prevSong() {
-            if (isSkipping) return;
-            if (playlist.length === 0) return;
-            
-            let newIndex = Math.floor(Math.random() * playlist.length);
-            currentIndex = newIndex;
-            tryLoadSong(currentIndex);
-        }
-
         // 监听播放结束和错误事件
         audio.addEventListener('ended', () => nextSong(true));
         audio.addEventListener('error', () => nextSong(true));
@@ -348,7 +399,6 @@
         // 绑定按钮事件
         document.getElementById('playBtn').onclick = playPause;
         document.getElementById('nextBtn').onclick = () => nextSong(false);
-        document.getElementById('prevBtn').onclick = prevSong;
 
         // 初始化所有
         loadNav();
