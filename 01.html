@@ -44,10 +44,10 @@
             padding: 40px;
             color: #606060;
         }
-        /* 播放器样式 - 窄版三按钮 + 歌名 */
+        /* 播放器样式 - 两个按钮 + 歌名（无上一首） */
         .music-player {
             width: auto;
-            max-width: 300px;
+            max-width: 260px;
             margin: 10px auto;
             background: rgba(200, 200, 200, 0.8);
             border-radius: 40px;
@@ -129,44 +129,73 @@
             border: none;
             display: block;
         }
-        /* ASCII Logo 样式 - 白色，放在时间上方 */
+        /* Logo 和时间容器 - 并排，底对齐 */
+        .logo-time-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            margin: 10px auto 5px;
+            flex-wrap: wrap;
+        }
+        /* ASCII Logo 样式 - 白色 */
         .ascii-logo {
             overflow-x: auto;
             text-align: center;
-            margin: 10px auto 5px;
         }
         .ascii-logo pre {
             font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
             font-size: 8px;
             color: #FFFFFF;
-            margin: 0 auto;
+            margin: 0;
             display: inline-block;
             line-height: 1.2;
+        }
+        /* 时间样式 - 白色，底对齐 */
+        .time-display {
+            color: #FFFFFF;
+            font-size: 28px;
+            white-space: nowrap;
+            line-height: 1;
+            padding-bottom: 2px;
+        }
+        /* 响应式：手机窄屏时上下排列 */
+        @media (max-width: 600px) {
+            .logo-time-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+            }
+            .time-display {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body bgcolor="#404040">
     <div style="text-align:center">
-        <!-- ASCII Logo - 白色，放在时间上方 -->
-        <a target="_blank" href="http://pcrock.hkfree.work/">
-            <div class="ascii-logo">
-                <pre>
+        <!-- Logo 和时间并排，底对齐 -->
+        <div class="logo-time-container">
+            <!-- ASCII Logo -->
+            <a target="_blank" href="http://pcrock.hkfree.work/">
+                <div class="ascii-logo">
+                    <pre>
  _____    _____   _____     ____     _____   _  __ 
 |  _  \  / ____| |  __ \   / __ \   / ____| | |/ / 
 | |_) | | |      | |__) | | |  | | | |      | ' /  
 |  _  / | |      |  _  /  | |  | | | |      |  <   
 | |     | |____  | | \ \  | |__| | | |____  | . \  
 |_|      \_____| |_|  \_\  \____/   \_____| |_|\_\
-                </pre>
-            </div>
-        </a>
+                    </pre>
+                </div>
+            </a>
+            
+            <!-- 时间 -->
+            <div id="time" class="time-display"></div>
+        </div>
         
-        <!-- 时间字体颜色白色 -->
-        <div id="time" style="color:#FFFFFF;font-size:28px;margin-top:5px"></div>
-        
-        <!-- 音乐播放器 - 三个按钮 + 歌名 -->
+        <!-- 音乐播放器 - 只有播放/暂停和下一首 -->
         <div class="music-player">
-            <button id="prevBtn">⏮</button>
             <button id="playBtn">▶</button>
             <button id="nextBtn">⏭</button>
             <span class="song-name" id="songName">未播放</span>
@@ -242,7 +271,7 @@
             `).join('');
         }
 
-        // ========== 音乐播放器（随机播放 + 失效自动跳过 + 超时控制） ==========
+        // ========== 音乐播放器（随机播放 + 失效自动跳过 + 超时控制，无上一首） ==========
         let playlist = [];
         let currentIndex = 0;
         let audio = new Audio();
@@ -357,16 +386,6 @@
             tryLoadSong(currentIndex);
         }
 
-        // 随机上一首（也是随机）
-        function prevSong() {
-            if (isSkipping) return;
-            if (playlist.length === 0) return;
-            
-            let newIndex = Math.floor(Math.random() * playlist.length);
-            currentIndex = newIndex;
-            tryLoadSong(currentIndex);
-        }
-
         // 监听播放结束和错误事件
         audio.addEventListener('ended', () => nextSong(true));
         audio.addEventListener('error', () => nextSong(true));
@@ -374,7 +393,6 @@
         // 绑定按钮事件
         document.getElementById('playBtn').onclick = playPause;
         document.getElementById('nextBtn').onclick = () => nextSong(false);
-        document.getElementById('prevBtn').onclick = prevSong;
 
         // 初始化所有
         loadNav();
