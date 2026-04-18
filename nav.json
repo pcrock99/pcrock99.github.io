@@ -1,0 +1,22 @@
+[
+    {
+        "name": "首页",
+        "url": "/",
+        "target": "_self"
+    },
+    {
+        "name": "工具",
+        "url": "http://pcrock.hkfree.work/#tools",
+        "target": "_blank"
+    },
+    {
+        "name": "影音",
+        "url": "http://pcrock.hkfree.work/#movie",
+        "target": "_blank"
+    },
+    {
+        "name": "关于",
+        "url": "/about.html",
+        "target": "_self"
+    }
+]
