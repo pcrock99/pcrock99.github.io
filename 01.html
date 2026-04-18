@@ -44,7 +44,7 @@
             padding: 40px;
             color: #606060;
         }
-        /* 播放器样式 - 无背景白框，歌名白色完整显示 */
+        /* 播放器样式 - 无背景，歌名白色 */
         .music-player {
             width: auto;
             margin: 10px auto;
@@ -52,15 +52,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .music-player button {
             background: #404040;
             color: white;
             border: none;
-            font-size: 18px;
-            width: 32px;
-            height: 32px;
+            font-size: 16px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s;
@@ -76,6 +77,9 @@
             font-size: 16px;
             color: #FFFFFF;
             white-space: nowrap;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 12px;
+            border-radius: 20px;
         }
         /* 导航栏样式 */
         .nav-bar {
@@ -141,7 +145,7 @@
         }
         .ascii-logo pre {
             font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
-            font-size: 16px;
+            font-size: 8px;
             color: #FFFFFF;
             margin: 0;
             display: inline-block;
@@ -150,7 +154,7 @@
         /* 时间样式 - 白色，右对齐 */
         .time-display {
             color: #FFFFFF;
-            font-size: 18px;
+            font-size: 28px;
             white-space: nowrap;
             line-height: 1;
             padding-bottom: 2px;
@@ -171,10 +175,29 @@
                 font-size: 24px;
             }
             .music-player .song-name {
-                font-size: 14px;
+                font-size: 12px;
                 white-space: normal;
                 word-break: keep-all;
             }
+        }
+        /* 提示消息 */
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: #FFCC33;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            z-index: 999;
+            animation: fadeOut 2s ease-in-out forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
         }
     </style>
 </head>
@@ -182,7 +205,6 @@
     <div style="text-align:center">
         <!-- Logo 左对齐，时间右对齐 -->
         <div class="logo-time-container">
-            <!-- ASCII Logo -->
             <a target="_blank" href="http://pcrock.hkfree.work/">
                 <div class="ascii-logo">
                     <pre>
@@ -195,37 +217,34 @@
                     </pre>
                 </div>
             </a>
-            
-            <!-- 时间 -->
             <div id="time" class="time-display"></div>
         </div>
         
-        <!-- 音乐播放器 - 无背景，歌名白色 -->
+        <!-- 音乐播放器 - 增强版 -->
         <div class="music-player">
             <button id="playBtn">▶</button>
             <button id="nextBtn">⏭</button>
+            <button id="exploreBtn" title="随机探索">🎲</button>
+            <button id="copyBtn" title="复制链接">📋</button>
+            <button id="likeBtn" title="收藏到歌单">❤️</button>
             <span class="song-name" id="songName">未播放</span>
         </div>
 
-        <!-- 导航栏 - 动态加载 -->
+        <!-- 导航栏 -->
         <div id="navBar" class="nav-bar">
             <span style="color:#606060">加载导航...</span>
         </div>
 
         <div class="pcrock">
-            <!-- 嵌入 bg 页面 -->
             <div class="bg-embed">
                 <iframe src="https://pcrock99.github.io/bg" title="BG页面"></iframe>
             </div>
-            
-            <!-- 博客文章列表容器 -->
             <div id="blogContainer" class="blog-list">
                 <div class="no-posts">加载文章中...</div>
             </div>
         </div>
     </div>
 
-    <!-- 粒子特效脚本 -->
     <script type="text/javascript" color="255,255,255" opacity="0.5" zindex="-2" count="180" src="/pcrock/pcrock.js"></script>
     
     <script>
@@ -277,12 +296,33 @@
             `).join('');
         }
 
-        // ========== 音乐播放器（随机播放 + 失效自动跳过 + 超时控制，无上一首） ==========
-        let playlist = [];
-        let currentIndex = 0;
+        // ========== 增强版音乐播放器 ==========
+        let playlist = [];      // 歌单 [{ name, url }]
+        let currentMode = 'playlist'; // 'playlist' 或 'explore'
+        let currentSong = { name: '', url: '', id: null };
         let audio = new Audio();
         let isPlaying = false;
         let isSkipping = false;
+
+        // 显示提示消息
+        function showMessage(msg, isError = false) {
+            let toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.innerText = msg;
+            toast.style.color = isError ? '#ff6666' : '#FFCC33';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // 复制到剪贴板
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showMessage('✅ 已复制: ' + text.substring(0, 50) + (text.length > 50 ? '...' : ''));
+            } catch (err) {
+                showMessage('❌ 复制失败', true);
+            }
+        }
 
         // 加载播放列表
         async function loadPlaylist() {
@@ -300,78 +340,82 @@
                     }
                 }
                 if (playlist.length === 0) {
-                    document.getElementById('songName').innerText = '无歌曲';
-                    return;
+                    document.getElementById('songName').innerText = '无歌单';
                 }
-                // 随机选一首开始
-                currentIndex = Math.floor(Math.random() * playlist.length);
-                tryLoadSong(currentIndex);
             } catch (error) {
                 console.error('播放列表加载失败', error);
-                document.getElementById('songName').innerText = '列表缺失';
             }
         }
 
-        // 检测链接是否有效（带超时）
+        // 检测链接是否有效
         function isLinkReachable(url, timeout = 4000) {
             return new Promise((resolve) => {
                 const controller = new AbortController();
-                const timer = setTimeout(() => {
-                    controller.abort();
-                    resolve(false);
-                }, timeout);
-
-                fetch(url, { 
-                    method: 'HEAD', 
-                    signal: controller.signal,
-                    mode: 'no-cors'
-                })
-                .then(() => {
-                    clearTimeout(timer);
-                    resolve(true);
-                })
-                .catch(() => {
-                    clearTimeout(timer);
-                    resolve(false);
-                });
+                const timer = setTimeout(() => controller.abort(), timeout);
+                fetch(url, { method: 'HEAD', signal: controller.signal, mode: 'no-cors' })
+                    .then(() => { clearTimeout(timer); resolve(true); })
+                    .catch(() => { clearTimeout(timer); resolve(false); });
             });
         }
 
-        // 尝试加载一首歌
-        async function tryLoadSong(index) {
+        // 从歌单随机选一首
+        function getRandomFromPlaylist() {
+            if (playlist.length === 0) return null;
+            let index = Math.floor(Math.random() * playlist.length);
+            return { ...playlist[index], id: null, mode: 'playlist' };
+        }
+
+        // 随机生成网易云ID (100 - 9999999999)
+        function getRandomNetEaseId() {
+            return Math.floor(Math.random() * (9999999999 - 100 + 1) + 100);
+        }
+
+        // 构建网易云外链
+        function buildNetEaseUrl(id) {
+            return `https://music.163.com/song/media/outer/url?id=${id}.mp3`;
+        }
+
+        // 尝试加载歌曲
+        async function tryLoadSong(songInfo) {
             if (isSkipping) return;
-            if (playlist.length === 0) return;
-
             isSkipping = true;
-            if (index >= playlist.length) index = 0;
-            const song = playlist[index];
+            
+            currentSong = songInfo;
+            let displayName = songInfo.name;
+            let urlToPlay = songInfo.url;
+            
+            if (songInfo.mode === 'explore') {
+                displayName = `🎲 探索 ID: ${songInfo.id}`;
+            }
+            
             document.getElementById('songName').innerText = '检测中...';
-
-            const isReachable = await isLinkReachable(song.url, 4000);
-
+            
+            const isReachable = await isLinkReachable(urlToPlay, 5000);
+            
             if (!isReachable) {
-                console.log(`失效或超时，自动跳过: ${song.name}`);
-                let newIndex = Math.floor(Math.random() * playlist.length);
-                currentIndex = newIndex;
+                console.log(`失效: ${displayName}`);
                 isSkipping = false;
-                tryLoadSong(currentIndex);
+                if (currentMode === 'explore') {
+                    showMessage(`❌ ID ${songInfo.id} 无效，重新探索...`, true);
+                    exploreRandom();
+                } else {
+                    nextSong(true);
+                }
                 return;
             }
-
-            document.getElementById('songName').innerText = song.name;
-            audio.src = song.url;
+            
+            document.getElementById('songName').innerText = displayName;
+            audio.src = urlToPlay;
             isSkipping = false;
-
+            
             if (isPlaying) {
-                const playPromise = audio.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(() => nextSong(true));
-                }
+                audio.play().catch(() => nextSong(true));
             }
         }
 
+        // 播放/暂停
         function playPause() {
-            if (playlist.length === 0) return;
+            if (isSkipping) return;
             if (isPlaying) {
                 audio.pause();
                 document.getElementById('playBtn').innerHTML = '▶';
@@ -382,28 +426,119 @@
             isPlaying = !isPlaying;
         }
 
-        // 随机下一首
+        // 下一首（根据当前模式）
         function nextSong(autoSkip = false) {
             if (isSkipping && !autoSkip) return;
-            if (playlist.length === 0) return;
             
-            let newIndex = Math.floor(Math.random() * playlist.length);
-            currentIndex = newIndex;
-            tryLoadSong(currentIndex);
+            if (currentMode === 'explore') {
+                exploreRandom();
+            } else {
+                const randomSong = getRandomFromPlaylist();
+                if (randomSong) {
+                    tryLoadSong(randomSong);
+                } else {
+                    showMessage('❌ 歌单为空，请先添加歌曲或点击🎲探索', true);
+                }
+            }
         }
 
-        // 监听播放结束和错误事件
+        // 随机探索模式
+        async function exploreRandom() {
+            if (isSkipping) return;
+            currentMode = 'explore';
+            const randomId = getRandomNetEaseId();
+            const url = buildNetEaseUrl(randomId);
+            tryLoadSong({
+                name: `探索 ID: ${randomId}`,
+                url: url,
+                id: randomId,
+                mode: 'explore'
+            });
+        }
+
+        // 切换回歌单模式并随机播放一首
+        function switchToPlaylist() {
+            if (isSkipping) return;
+            currentMode = 'playlist';
+            const randomSong = getRandomFromPlaylist();
+            if (randomSong) {
+                tryLoadSong(randomSong);
+            } else {
+                showMessage('❌ 歌单为空，请先添加歌曲或点击🎲探索', true);
+            }
+        }
+
+        // 复制当前歌曲链接
+        function copyCurrentLink() {
+            if (currentSong && currentSong.url) {
+                copyToClipboard(currentSong.url);
+            } else {
+                showMessage('没有正在播放的歌曲', true);
+            }
+        }
+
+        // 收藏当前歌曲到 playlist.txt
+        async function likeCurrentSong() {
+            if (!currentSong || !currentSong.url) {
+                showMessage('没有正在播放的歌曲', true);
+                return;
+            }
+            
+            let name = '';
+            let url = '';
+            
+            if (currentSong.mode === 'explore') {
+                name = `网易云_${currentSong.id}`;
+                url = currentSong.url;
+            } else {
+                name = currentSong.name;
+                url = currentSong.url;
+            }
+            
+            // 检查是否已在歌单中
+            if (playlist.some(song => song.url === url)) {
+                showMessage('这首歌已经在歌单里了');
+                return;
+            }
+            
+            // 追加到 playlist.txt（通过后端接口或下载文件）
+            const newLine = `${name}$${url}`;
+            // 由于浏览器无法直接写文件，提示用户手动添加
+            showMessage(`请手动添加到 playlist.txt:\n${newLine}`);
+            
+            // 同时尝试下载一个追加文件（方便操作）
+            const blob = new Blob(['\n' + newLine], {type: 'text/plain'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'add_to_playlist.txt';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        // 绑定事件
+        document.getElementById('playBtn').onclick = playPause;
+        document.getElementById('nextBtn').onclick = () => nextSong(false);
+        document.getElementById('exploreBtn').onclick = exploreRandom;
+        document.getElementById('copyBtn').onclick = copyCurrentLink;
+        document.getElementById('likeBtn').onclick = likeCurrentSong;
+        
         audio.addEventListener('ended', () => nextSong(true));
         audio.addEventListener('error', () => nextSong(true));
 
-        // 绑定按钮事件
-        document.getElementById('playBtn').onclick = playPause;
-        document.getElementById('nextBtn').onclick = () => nextSong(false);
-
-        // 初始化所有
-        loadNav();
-        loadPosts();
-        loadPlaylist();
+        // 初始化
+        async function init() {
+            await loadNav();
+            await loadPosts();
+            await loadPlaylist();
+            if (playlist.length > 0) {
+                const randomSong = getRandomFromPlaylist();
+                if (randomSong) tryLoadSong(randomSong);
+            } else {
+                document.getElementById('songName').innerText = '点击🎲探索';
+            }
+        }
+        
+        init();
     </script>
     <script>
         setInterval("time.innerHTML = new Date().toLocaleString('chinese',{hour12:false});",1000);
