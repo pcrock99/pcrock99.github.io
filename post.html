@@ -1,45 +1,64 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>文章 - PCROCK</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/pcrock/pcrock.css" />
-    <link rel="shortcut icon" href="favicon.ico" />
     <style>
-        .post-container {
-            width: 680px;
-            margin: 20px auto;
-            background: rgba(240, 240, 240, 0.95);
+        body {
+            background: #404040;
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            width: 90%;
+            margin: 0 auto;
+            background: #f0f0f0;
             border-radius: 30px;
-            padding: 30px;
-            text-align: left;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .post-title {
-            font-size: 28px;
-            color: #202020;
+            font-size: 24px;
+            margin-bottom: 10px;
             border-bottom: 2px solid #FFCC33;
             padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .post-date {
-            color: #606060;
-            font-size: 14px;
-            margin-bottom: 30px;
+            word-break: break-word;
         }
         .post-content {
-            font-size: 16px;
             line-height: 1.6;
-            color: #202020;
+            font-size: 16px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
-        .post-content p {
-            margin: 15px 0;
+        .post-content pre,
+        .post-content code {
+            white-space: pre-wrap;
+            word-break: break-all;
+            background: #e0e0e0;
+            padding: 2px 6px;
+            border-radius: 6px;
+            display: inline-block;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        .post-content pre {
+            padding: 12px;
+            overflow-x: auto;
+        }
+        .post-content img,
+        .post-content table {
+            max-width: 100%;
+            height: auto;
         }
         .back-link {
             display: inline-block;
             margin-top: 30px;
-            color: #FFD306;
-            background: #404040;
-            padding: 8px 20px;
+            background: #606060;
+            color: white;
+            padding: 8px 16px;
             border-radius: 20px;
             text-decoration: none;
         }
@@ -47,57 +66,60 @@
             background: #FFCC33;
             color: #202020;
         }
-        .pcrock {
-            height: auto;
-            min-height: 240px;
-            border-radius: 30px;
-            padding: 15px 0;
+        .error {
+            color: red;
+            text-align: center;
+            padding: 40px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            .post-title {
+                font-size: 20px;
+            }
+            .post-content {
+                font-size: 14px;
+            }
         }
     </style>
+    <!-- 引入 marked.js 解析 Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-<body bgcolor="#404040">
-    <div style="text-align:center">
-        <div class="pcrock">
-            <a target="_blank" href="http://pcrock.hkfree.work/"><h1>PCROCK</h1></a>
-            <div id="postContainer" class="post-container">
-                <div style="text-align:center;padding:40px">加载文章中...</div>
-            </div>
-        </div>
+<body>
+    <div class="container">
+        <div id="post-title" class="post-title">加载中...</div>
+        <div id="post-content" class="post-content">正在读取文章...</div>
+        <a href="index.html" class="back-link">← 返回首页</a>
     </div>
 
-    <script type="text/javascript" color="255,255,255" opacity="0.5" zindex="-2" count="180" src="/pcrock/pcrock.js"></script>
     <script>
-        async function loadPost() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const postId = urlParams.get('id');
-            if (!postId) {
-                document.getElementById('postContainer').innerHTML = '<div class="post-container" style="text-align:center">文章不存在</div>';
-                return;
-            }
-            try {
-                const response = await fetch('/posts.json');
-                const posts = await response.json();
-                const post = posts.find(p => p.id == postId);
-                if (!post) {
-                    document.getElementById('postContainer').innerHTML = '<div class="post-container" style="text-align:center">文章未找到</div>';
-                    return;
-                }
-                document.title = post.title + ' - PCROCK';
-                document.getElementById('postContainer').innerHTML = `
-                    <div class="post-title">${post.title}</div>
-                    <div class="post-date">${post.date}</div>
-                    <div class="post-content">${post.content}</div>
-                    <a href="/" class="back-link">← 返回首页</a>
-                `;
-            } catch (error) {
-                document.getElementById('postContainer').innerHTML = '<div class="post-container" style="text-align:center">文章加载失败</div>';
-            }
+        const urlParams = new URLSearchParams(window.location.search);
+        const filePath = urlParams.get('file');
+        const postTitle = urlParams.get('title');
+
+        if (!filePath) {
+            document.getElementById('post-title').innerText = '错误';
+            document.getElementById('post-content').innerHTML = '<div class="error">文章地址无效</div>';
+        } else {
+            document.title = postTitle + ' - PCROCK';
+            document.getElementById('post-title').innerText = postTitle;
+            
+            fetch(filePath)
+                .then(response => {
+                    if (!response.ok) throw new Error('文章不存在');
+                    return response.text();
+                })
+                .then(markdown => {
+                    const html = marked.parse(markdown);
+                    document.getElementById('post-content').innerHTML = html;
+                })
+                .catch(error => {
+                    document.getElementById('post-content').innerHTML = '<div class="error">文章加载失败，请检查文件路径</div>';
+                    console.error(error);
+                });
         }
-        loadPost();
-    </script>
-    <script>
-        document.oncontextmenu = new Function("event.returnValue=false;");
-        document.onselectstart = new Function("event.returnValue=false;");
     </script>
 </body>
 </html>
