@@ -44,14 +44,52 @@
             padding: 40px;
             color: #606060;
         }
+        
+        /* 顶部容器：Logo 在左，右上区域（时间+播放器）在右 */
+        .top-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 90%;
+            max-width: 800px;
+            margin: 10px auto 5px;
+            gap: 20px;
+        }
+        
+        /* ASCII Logo 样式 - 白色，左对齐 */
+        .ascii-logo {
+            overflow-x: auto;
+            text-align: left;
+            flex-shrink: 1;
+        }
+        .ascii-logo pre {
+            font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+            font-size: 18px;
+            color: #FFFFFF;
+            margin: 0;
+            display: inline-block;
+            line-height: 1.2;
+        }
+        
+        /* 右上区域容器：时间在上，播放器在下 */
+        .top-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        
+        /* 时间样式 - 白色 */
+        .time-display {
+            color: #FFFFFF;
+            font-size: 18px;
+            white-space: nowrap;
+            margin-bottom: 8px;
+        }
+        
         /* 播放器样式 - 无背景白框，歌名白色完整显示 */
         .music-player {
-            width: auto;
-            margin: 10px auto;
-            padding: 6px 16px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
             gap: 12px;
         }
         .music-player button {
@@ -77,30 +115,48 @@
             color: #FFFFFF;
             white-space: nowrap;
         }
-        /* 导航栏样式 */
+        
+        /* 导航栏样式 - 无背景，垂直排列，左对齐 */
         .nav-bar {
-            width: 680px;
-            margin: 0 auto 10px;
-            background: rgba(240, 240, 240, 0.95);
-            border-radius: 30px;
-            padding: 10px 20px;
+            width: 200px;
+            margin: 20px 0 0 5%;
+            background: transparent;
             display: flex;
-            justify-content: center;
-            gap: 30px;
+            flex-direction: column;
+            gap: 12px;
         }
         .nav-bar a {
-            color: #202020;
+            color: #FFFFFF;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
-            padding: 5px 12px;
-            border-radius: 20px;
+            padding: 8px 16px;
+            border-radius: 30px;
             transition: all 0.2s;
+            display: inline-block;
+            width: fit-content;
         }
         .nav-bar a:hover {
             background: #FFCC33;
             color: #202020;
         }
+        
+        /* 主内容区域：左侧导航 + 右侧内容 */
+        .main-layout {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 右侧内容区 */
+        .content-area {
+            flex: 1;
+            min-width: 0;
+        }
+        
         /* 调整主面板高度适应内容 */
         .pcrock {
             height: auto;
@@ -108,10 +164,11 @@
             border-radius: 30px;
             padding: 15px 0;
         }
+        
         /* 嵌入 bg 页面样式 */
         .bg-embed {
             margin: 20px auto;
-            width: 90%;
+            width: 100%;
             border-radius: 20px;
             overflow: hidden;
             background: #fff;
@@ -123,66 +180,48 @@
             border: none;
             display: block;
         }
-        /* Logo 和时间容器 - 左右分布 */
-        .logo-time-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            width: 90%;
-            max-width: 800px;
-            margin: 10px auto 5px;
-            gap: 20px;
+        
+        /* 博客列表宽度自适应 */
+        .blog-list {
+            width: 100%;
+            margin: 20px 0;
         }
-        /* ASCII Logo 样式 - 白色，左对齐 */
-        .ascii-logo {
-            overflow-x: auto;
-            text-align: left;
-            flex-shrink: 1;
-        }
-        .ascii-logo pre {
-            font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
-            font-size: 18px;
-            color: #FFFFFF;
-            margin: 0;
-            display: inline-block;
-            line-height: 1.2;
-        }
-        /* 时间样式 - 白色，右对齐 */
-        .time-display {
-            color: #FFFFFF;
-            font-size: 18px;
-            white-space: nowrap;
-            line-height: 1;
-            padding-bottom: 2px;
-            flex-shrink: 0;
-        }
+        
         /* 响应式：手机窄屏时上下排列 */
-        @media (max-width: 600px) {
-            .logo-time-container {
+        @media (max-width: 800px) {
+            .main-layout {
                 flex-direction: column;
-                align-items: stretch;
-                gap: 5px;
+                align-items: center;
             }
-            .ascii-logo {
+            .nav-bar {
+                width: auto;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin: 20px auto;
+            }
+            .top-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .top-right {
                 text-align: center;
             }
-            .time-display {
-                text-align: center;
-                font-size: 24px;
+            .music-player {
+                justify-content: center;
             }
             .music-player .song-name {
                 font-size: 14px;
                 white-space: normal;
-                word-break: keep-all;
             }
         }
     </style>
 </head>
 <body bgcolor="#404040">
     <div style="text-align:center">
-        <!-- Logo 左对齐，时间右对齐 -->
-        <div class="logo-time-container">
-            <!-- ASCII Logo -->
+        <!-- 顶部区域：Logo 在左，时间+播放器在右 -->
+        <div class="top-container">
+            <!-- ASCII Logo 保持原位（左侧） -->
             <a target="_blank" href="http://pcrock.hkfree.work/">
                 <div class="ascii-logo">
                     <pre>
@@ -196,31 +235,40 @@
                 </div>
             </a>
             
-            <!-- 时间 -->
-            <div id="time" class="time-display"></div>
-        </div>
-        
-        <!-- 音乐播放器 - 无背景，歌名白色 -->
-        <div class="music-player">
-            <button id="playBtn">▶</button>
-            <button id="nextBtn">⏭</button>
-            <span class="song-name" id="songName">未播放</span>
-        </div>
-
-        <!-- 导航栏 - 动态加载 -->
-        <div id="navBar" class="nav-bar">
-            <span style="color:#606060">加载导航...</span>
-        </div>
-
-        <div class="pcrock">
-            <!-- 嵌入 bg 页面 -->
-            <div class="bg-embed">
-                <iframe src="https://pcrock99.github.io/bg" title="Bg页面"></iframe>
+            <!-- 右上区域：时间在上，播放器在下 -->
+            <div class="top-right">
+                <!-- 时间 -->
+                <div id="time" class="time-display"></div>
+                
+                <!-- 音乐播放器 -->
+                <div class="music-player">
+                    <button id="playBtn">▶</button>
+                    <button id="nextBtn">⏭</button>
+                    <span class="song-name" id="songName">未播放</span>
+                </div>
             </div>
-            
-            <!-- 博客文章列表容器 -->
-            <div id="blogContainer" class="blog-list">
-                <div class="no-posts">加载文章中...</div>
+        </div>
+
+        <!-- 导航栏 - 无背景，垂直排列，位于 Logo 下方左侧 -->
+        <div id="navBar" class="nav-bar">
+            <span style="color:#FFFFFF">加载导航...</span>
+        </div>
+
+        <!-- 主布局：左侧导航占位已独立，右侧内容区 -->
+        <div class="main-layout">
+            <!-- 左侧导航栏已经在上面独立，这里不需要重复，所以右侧直接放内容 -->
+            <div class="content-area">
+                <div class="pcrock">
+                    <!-- 嵌入 bg 页面 -->
+                    <div class="bg-embed">
+                        <iframe src="https://pcrock99.github.io/bg" title="Bg页面"></iframe>
+                    </div>
+                    
+                    <!-- 博客文章列表容器 -->
+                    <div id="blogContainer" class="blog-list">
+                        <div class="no-posts">加载文章中...</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -245,7 +293,7 @@
                 ).join('');
             } catch (error) {
                 console.error('导航加载失败', error);
-                document.getElementById('navBar').innerHTML = '<span style="color:#606060">导航加载失败</span>';
+                document.getElementById('navBar').innerHTML = '<span style="color:#FFFFFF">导航加载失败</span>';
             }
         }
 
