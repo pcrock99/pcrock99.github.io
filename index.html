@@ -490,7 +490,7 @@ let isSkipping = false;
 // 新版的加载函数：直接读取 .m3u8 文件
 async function loadPlaylist() {
     try {
-        const response = await fetch('https://pcrock99.github.io/playlist.m3u8');
+        const response = await fetch('https://pcrock99.github.io/playlist.m3u');
         if (!response.ok) throw new Error('M3U8列表加载失败');
         const text = await response.text();
         
