@@ -5,11 +5,6 @@
         "target": "_self"
     },
     {
-        "name": "论坛",
-        "url": "https://pcrock.24d24.com/",
-        "target": "_blank"
-    },
-    {
         "name": "空位",
         "url": "/",
         "target": "_blank"
