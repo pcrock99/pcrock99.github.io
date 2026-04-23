@@ -5,8 +5,13 @@
         "target": "_self"
     },
     {
+        "name": "路过",
+        "url": "https://imgchr.com/",
+        "target": "_blank"
+    },
+    {
         "name": "空位",
-        "url": "/",
+        "url": "",
         "target": "_blank"
     }
 ]
