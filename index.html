@@ -102,39 +102,45 @@
         }
         
         /* 左侧导航栏 - 固定宽度约5个字 */
-        .sidebar {
-            flex: 0 0 20px;
-            min-width: 20px;
-            max-width: 20px;
-        }
-        .nav-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .nav-menu a {
-            color: #DDDDDD;
-            text-decoration: none;
-            font-size: 15px;
-            padding: 4px 0;
-            transition: all 0.2s;
-            display: block;
-            white-space: nowrap;
-        }
-        .nav-menu a:hover {
-            color: #FFCC33;
-            padding-left: 4px;
-        }
+.sidebar {
+    flex: 0 0 80px;
+    min-width: 80px;
+    max-width: 80px;
+}
+
+.nav-menu a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 15px;
+    padding: 8px 12px;
+    transition: all 0.2s;
+    display: block;
+    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.nav-menu a:hover {
+    background: rgba(255, 204, 51, 0.7);
+    color: #202020;
+    transform: translateX(4px);
+}
         
         /* 右侧内容区 - 自动占满剩余宽度 */
-        .content-area {
-            flex: 1;
-            min-width: 260px;
-            background: rgba(245, 245, 245, 0.98);
-            border-radius: 16px;
-            padding: 28px 32px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
+.content-area {
+    flex: 1;
+    min-width: 260px;
+    background: rgba(245, 245, 245, 0.25);  /* 半透白 */
+    backdrop-filter: blur(12px);             /* 毛玻璃核心 */
+    -webkit-backdrop-filter: blur(12px);     /* Safari 兼容 */
+    border-radius: 24px;
+    padding: 28px 32px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
         
         /* 嵌入 bg 页面 */
         .bg-embed {
@@ -632,5 +638,206 @@ async function loadPlaylist() {
         document.oncontextmenu = new Function("event.returnValue=false;");
         document.onselectstart = new Function("event.returnValue=false;");
     </script>
+<!-- 摸鱼倒计时 - 悬浮右下角 -->
+<style>
+    .moyu-clock {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        color: #FFCC33;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        padding: 10px 16px;
+        border-radius: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        z-index: 9999;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,204,51,0.3);
+        pointer-events: auto;
+    }
+    .moyu-clock:hover {
+        background: rgba(0, 0, 0, 0.85);
+        transform: scale(1.02);
+        border-color: #FFCC33;
+    }
+    .moyu-clock span {
+        display: block;
+    }
+    .moyu-time {
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    .moyu-label {
+        font-size: 11px;
+        color: #aaa;
+        margin-top: 4px;
+    }
+    @media (max-width: 600px) {
+        .moyu-clock {
+            font-size: 10px;
+            padding: 6px 12px;
+            bottom: 10px;
+            right: 10px;
+        }
+        .moyu-time {
+            font-size: 13px;
+        }
+    }
+</style>
+
+<div class="moyu-clock" id="moyuClock" title="点击刷新">
+    <span class="moyu-time" id="moyuTime">--:--:--</span>
+    <span class="moyu-label" id="moyuLabel">摸鱼倒计时</span>
+</div>
+
+<script>
+    (function() {
+        // 下班时间设置（24小时制）
+        const WORK_END_HOUR = 17;
+        const WORK_END_MINUTE = 30;
+        
+        function formatTime(seconds) {
+            if (seconds <= 0) return null;
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function getWeekendSeconds(now) {
+            // 周五 17:30 之后到周日 23:59:59
+            const day = now.getDay(); // 0周日 1周一 ... 5周五 6周六
+            const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+            const endOfWorkSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
+            
+            if (day === 5 && currentSec >= endOfWorkSec) {
+                // 周五下班后，距离周末还有 2天? 实际是到周日 23:59:59
+                const sundayEnd = new Date(now);
+                sundayEnd.setDate(now.getDate() + (7 - day));
+                sundayEnd.setHours(23, 59, 59, 999);
+                return Math.floor((sundayEnd - now) / 1000);
+            }
+            if (day === 6) {
+                const sundayEnd = new Date(now);
+                sundayEnd.setDate(now.getDate() + (7 - day));
+                sundayEnd.setHours(23, 59, 59, 999);
+                return Math.floor((sundayEnd - now) / 1000);
+            }
+            if (day === 0) {
+                // 周日，显示到当天结束
+                const dayEnd = new Date(now);
+                dayEnd.setHours(23, 59, 59, 999);
+                return Math.floor((dayEnd - now) / 1000);
+            }
+            return 0;
+        }
+        
+        function updateCountdown() {
+            const now = new Date();
+            const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+            const endSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
+            const day = now.getDay(); // 0周日 1-5周一到周五 6周六
+            
+            const timeEl = document.getElementById('moyuTime');
+            const labelEl = document.getElementById('moyuLabel');
+            
+            // 周末（周六、周日）显示周末剩余
+            if (day === 6 || day === 0) {
+                const weekendSec = getWeekendSeconds(now);
+                if (weekendSec > 0) {
+                    timeEl.innerText = formatTime(weekendSec);
+                    labelEl.innerText = '🌊 周末余额';
+                } else {
+                    timeEl.innerText = '🎉 摸鱼中';
+                    labelEl.innerText = '享受周末！';
+                }
+                return;
+            }
+            
+            // 周五且已过下班时间 -> 周末倒计时
+            if (day === 5 && currentSec >= endSec) {
+                const weekendSec = getWeekendSeconds(now);
+                if (weekendSec > 0) {
+                    timeEl.innerText = formatTime(weekendSec);
+                    labelEl.innerText = '🎉 周末倒计时';
+                } else {
+                    timeEl.innerText = '🎉 下班啦';
+                    labelEl.innerText = '周末愉快！';
+                }
+                return;
+            }
+            
+            // 工作日下班倒计时
+            if (currentSec < endSec) {
+                const remain = endSec - currentSec;
+                timeEl.innerText = formatTime(remain);
+                labelEl.innerText = day === 5 ? '🐟 周五下班' : '💼 下班倒计时';
+            } else {
+                // 已下班
+                timeEl.innerText = '🎉 已下班';
+                labelEl.innerText = '摸鱼愉快！';
+            }
+        }
+        
+        // 点击刷新
+        const clockDiv = document.getElementById('moyuClock');
+        clockDiv.addEventListener('click', () => {
+            updateCountdown();
+        });
+        
+        // 每秒更新
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    })();
+</script>
+<!-- 动态星空背景 -->
+<style>
+    #star-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+        pointer-events: none;
+        background: #0a0f1a;
+        overflow: hidden;
+    }
+    .star {
+        position: absolute;
+        background-color: white;
+        border-radius: 50%;
+        opacity: 0;
+        animation: twinkle 3s infinite alternate;
+    }
+    @keyframes twinkle {
+        0% { opacity: 0; transform: scale(0.5);}
+        100% { opacity: 1; transform: scale(1);}
+    }
+</style>
+<div id="star-bg"></div>
+<script>
+    (function() {
+        const starContainer = document.getElementById('star-bg');
+        const starCount = 120;
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 5 + 's';
+            star.style.animationDuration = Math.random() * 3 + 2 + 's';
+            starContainer.appendChild(star);
+        }
+    })();
+</script>
 </body>
 </html>
