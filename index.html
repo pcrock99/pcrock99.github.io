@@ -407,6 +407,30 @@
         </div>
     </div>
 
+        <!-- 影视搜索 -->
+<div style="text-align: center; margin-top: 15px;">
+    <a href="javascript:void(0)" id="jxBottomLink" style="color: rgba(255,204,51,0.6); text-decoration: none; font-size: 12px;">🔍 影视搜索</a>
+</div>
+
+<script>
+    (function() {
+        const link = document.getElementById('jxBottomLink');
+        if (link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const input = prompt('请输入内容：', '');
+                if (input) {
+                    if (confirm(`确认在新标签页打开「${input}」吗？`)) {
+                        const baseUrl = 'https://im1907.top/?jx=';
+                        const url = baseUrl + encodeURIComponent(input);
+                        window.open(url, '_blank');
+                    }
+                }
+            });
+        }
+    })();
+</script>
+
     <!-- 粒子特效脚本 -->
     <script>
         (function() {
