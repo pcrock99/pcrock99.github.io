@@ -870,95 +870,113 @@
         <span class="moyu-label" id="moyuLabel">摸鱼倒计时</span>
     </div>
 
-    <script>
-        (function() {
-            const WORK_END_HOUR = 17;
-            const WORK_END_MINUTE = 30;
+<script>
+    (function() {
+        // 下班时间设置（24小时制）
+        const WORK_END_HOUR = 17;
+        const WORK_END_MINUTE = 30;
+        
+        function formatTime(seconds) {
+            if (seconds <= 0) return null;
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function getWeekendSeconds(now) {
+            const day = now.getDay();
+            const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+            const endOfWorkSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
             
-            function formatTime(seconds) {
-                if (seconds <= 0) return null;
-                const hours = Math.floor(seconds / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                const secs = seconds % 60;
-                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (day === 5 && currentSec >= endOfWorkSec) {
+                const sundayEnd = new Date(now);
+                sundayEnd.setDate(now.getDate() + (7 - day));
+                sundayEnd.setHours(23, 59, 59, 999);
+                return Math.floor((sundayEnd - now) / 1000);
             }
-            
-            function getWeekendSeconds(now) {
-                const day = now.getDay();
-                const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-                const endOfWorkSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
-                
-                if (day === 5 && currentSec >= endOfWorkSec) {
-                    const sundayEnd = new Date(now);
-                    sundayEnd.setDate(now.getDate() + (7 - day));
-                    sundayEnd.setHours(23, 59, 59, 999);
-                    return Math.floor((sundayEnd - now) / 1000);
-                }
-                if (day === 6) {
-                    const sundayEnd = new Date(now);
-                    sundayEnd.setDate(now.getDate() + (7 - day));
-                    sundayEnd.setHours(23, 59, 59, 999);
-                    return Math.floor((sundayEnd - now) / 1000);
-                }
-                if (day === 0) {
-                    const dayEnd = new Date(now);
-                    dayEnd.setHours(23, 59, 59, 999);
-                    return Math.floor((dayEnd - now) / 1000);
-                }
-                return 0;
+            if (day === 6) {
+                const sundayEnd = new Date(now);
+                sundayEnd.setDate(now.getDate() + (7 - day));
+                sundayEnd.setHours(23, 59, 59, 999);
+                return Math.floor((sundayEnd - now) / 1000);
             }
+            if (day === 0) {
+                const dayEnd = new Date(now);
+                dayEnd.setHours(23, 59, 59, 999);
+                return Math.floor((dayEnd - now) / 1000);
+            }
+            return 0;
+        }
+        
+        function updateCountdown() {
+            const now = new Date();
+            const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+            const endSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
+            const day = now.getDay();
             
-            function updateCountdown() {
-                const now = new Date();
-                const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-                const endSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
-                const day = now.getDay();
-                
-                const timeEl = document.getElementById('moyuTime');
-                const labelEl = document.getElementById('moyuLabel');
-                
-                if (day === 6 || day === 0) {
-                    const weekendSec = getWeekendSeconds(now);
-                    if (weekendSec > 0) {
-                        timeEl.innerText = formatTime(weekendSec);
-                        labelEl.innerText = '🌊 周末余额';
-                    } else {
-                        timeEl.innerText = '🎉 摸鱼中';
-                        labelEl.innerText = '享受周末！';
-                    }
-                    return;
-                }
-                
-                if (day === 5 && currentSec >= endSec) {
-                    const weekendSec = getWeekendSeconds(now);
-                    if (weekendSec > 0) {
-                        timeEl.innerText = formatTime(weekendSec);
-                        labelEl.innerText = '🎉 周末倒计时';
-                    } else {
-                        timeEl.innerText = '🎉 下班啦';
-                        labelEl.innerText = '周末愉快！';
-                    }
-                    return;
-                }
-                
-                if (currentSec < endSec) {
-                    const remain = endSec - currentSec;
-                    timeEl.innerText = formatTime(remain);
-                    labelEl.innerText = day === 5 ? '🐟 周五下班' : '💼 下班倒计时';
+            const timeEl = document.getElementById('moyuTime');
+            const labelEl = document.getElementById('moyuLabel');
+            
+            if (day === 6 || day === 0) {
+                const weekendSec = getWeekendSeconds(now);
+                if (weekendSec > 0) {
+                    timeEl.innerText = formatTime(weekendSec);
+                    labelEl.innerText = '🌊 周末余额';
                 } else {
-                    timeEl.innerText = '🎉 已下班';
-                    labelEl.innerText = '摸鱼愉快！';
+                    timeEl.innerText = '🎉 摸鱼中';
+                    labelEl.innerText = '享受周末！';
                 }
+                return;
             }
             
-            const clockDiv = document.getElementById('moyuClock');
-            clockDiv.addEventListener('click', () => {
-                updateCountdown();
-            });
+            if (day === 5 && currentSec >= endSec) {
+                const weekendSec = getWeekendSeconds(now);
+                if (weekendSec > 0) {
+                    timeEl.innerText = formatTime(weekendSec);
+                    labelEl.innerText = '🎉 周末倒计时';
+                } else {
+                    timeEl.innerText = '🎉 下班啦';
+                    labelEl.innerText = '周末愉快！';
+                }
+                return;
+            }
             
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-        })();
-    </script>
+            if (currentSec < endSec) {
+                const remain = endSec - currentSec;
+                timeEl.innerText = formatTime(remain);
+                labelEl.innerText = day === 5 ? '🐟 周五下班' : '💼 下班倒计时';
+            } else {
+                timeEl.innerText = '🎉 已下班';
+                labelEl.innerText = '摸鱼愉快！';
+            }
+        }
+        
+        // 🎣 摸鱼搜索（替换原来的点击刷新）
+        function moyuSearch() {
+            const input = prompt('🎣 摸鱼时间到！输入视频链接或关键词：', '');
+            if (input && input.trim()) {
+                if (confirm(`确认解析「${input}」吗？\n摸鱼愉快~`)) {
+                    const baseUrl = 'https://im1907.top/?jx=';
+                    const url = baseUrl + encodeURIComponent(input.trim());
+                    window.open(url, '_blank');
+                }
+            }
+        }
+        
+        // 绑定点击事件：点击摸鱼倒计时 → 弹出搜索框
+        const clockDiv = document.getElementById('moyuClock');
+        if (clockDiv) {
+            clockDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                moyuSearch();          // 搜索，不再刷新倒计时
+            });
+        }
+        
+        // 倒计时仍然自动更新
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    })();
+</script>
 </body>
 </html>
