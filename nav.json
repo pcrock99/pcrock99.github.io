@@ -10,6 +10,11 @@
         "target": "_blank"
     },
     {
+        "name": "deepseek",
+        "url": "https://deepseek.com/",
+        "target": "_blank"
+    },
+    {
         "name": "路过",
         "url": "https://imgchr.com/",
         "target": "_blank"
