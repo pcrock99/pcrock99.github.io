@@ -5,6 +5,11 @@
         "target": "_self"
     },
     {
+        "name": "github",
+        "url": "https://github.com/",
+        "target": "_blank"
+    },
+    {
         "name": "路过",
         "url": "https://imgchr.com/",
         "target": "_blank"
