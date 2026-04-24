@@ -840,7 +840,17 @@
             }
         }
     </style>
-
+<!-- 浮动弹窗按钮 -->
+<div style="position: fixed; bottom: 100px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+    <a class="popup-link" href="https://hammyhome.com/" data-title="在线仓鼠" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">🐹 在线仓鼠</a>
+    <a class="popup-link" href="https://thispersondoesnotexist.com/" data-title="AI人脸生成器" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">👤 AI人脸</a>
+    <a class="popup-link" href="https://we.dog/" data-title="舔狗日记" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;"> 舔狗日记</a>
+    <a class="popup-link" href="https://www.yduanzi.com/" data-title="云段子" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">📖 云段子</a>
+    <a class="popup-link" href="https://suulnnka.github.io/BullshitGenerator/" data-title="狗屁不通文章生成器" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">📝 狗屁不通</a>
+    <a class="popup-link" href="https://lab.bangbang93.com/jichou" data-title="记仇生成器" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;"> 记仇</a>
+    <a class="popup-link" href="https://p.hancel.org/" data-title="摸鱼大闯关" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;"> 摸鱼闯关</a>
+    <a class="popup-link" href="https://8zt.cc/" data-title="毒鸡汤" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">🍲 毒鸡汤</a>
+</div>
 <!-- 右下角悬浮摸鱼功能区 -->
 <div style="position: fixed; bottom: 16px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
     
@@ -876,8 +886,8 @@
         const WORK_END_HOUR = 17;
         const WORK_END_MINUTE = 30;
         
-        // 🐔 毒鸡汤/摸鱼语录库
- const poisonSoup = [
+        //  毒鸡汤语录库
+const poisonSoup = [
     "「工作做不完，明天再说吧。」",
     "「你努力的样子，真像条咸鱼。」",
     "「今天不想做，那就不做。」",
@@ -920,8 +930,7 @@
     "「不是我不努力，是努力的方向还没找到（摸鱼的方向倒是找到了）。」",
     "「工作是一场马拉松，但我在中途找了家奶茶店坐下不跑了。」",
     "「每一个不曾摸鱼的日子，都是对生命的辜负。」"
-];
-        
+];        
         function getRandomPoison() {
             return poisonSoup[Math.floor(Math.random() * poisonSoup.length)];
         }
@@ -975,7 +984,7 @@
                     timeEl.innerText = formatTime(weekendSec);
                     labelEl.innerText = '🌊 周末余额';
                 } else {
-                    timeEl.innerText = '🎉 摸鱼中';
+                    timeEl.innerText = ' 摸鱼中';
                     labelEl.innerText = '享受周末！';
                 }
                 return;
@@ -985,9 +994,9 @@
                 const weekendSec = getWeekendSeconds(now);
                 if (weekendSec > 0) {
                     timeEl.innerText = formatTime(weekendSec);
-                    labelEl.innerText = '🎉 周末倒计时';
+                    labelEl.innerText = ' 周末倒计时';
                 } else {
-                    timeEl.innerText = '🎉 下班啦';
+                    timeEl.innerText = ' 下班啦';
                     labelEl.innerText = '周末愉快！';
                 }
                 return;
@@ -998,7 +1007,7 @@
                 timeEl.innerText = formatTime(remain);
                 labelEl.innerText = day === 5 ? '🐟 周五下班' : '💼 下班倒计时';
             } else {
-                timeEl.innerText = '🎉 已下班';
+                timeEl.innerText = ' 已下班';
                 labelEl.innerText = '摸鱼愉快！';
             }
         }
@@ -1061,6 +1070,241 @@
             updateCountdown();
             updateProgress();
         }, 1000);
+    })();
+</script>
+<!-- 浮动弹窗组件（iframe + 遮罩层） -->
+<style>
+    /* 遮罩层 */
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        z-index: 10000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    /* 弹窗容器 */
+    .popup-container {
+        position: relative;
+        width: 85%;
+        max-width: 1100px;
+        height: 80%;
+        max-height: 800px;
+        background: #1a1a2e;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        resize: both;
+        min-width: 400px;
+        min-height: 300px;
+    }
+    
+    /* 弹窗标题栏（可拖拽） */
+    .popup-header {
+        background: rgba(0,0,0,0.6);
+        color: #FFCC33;
+        padding: 10px 16px;
+        cursor: move;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: monospace;
+        font-size: 14px;
+        user-select: none;
+        border-bottom: 1px solid rgba(255,204,51,0.3);
+    }
+    
+    .popup-title {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .popup-buttons {
+        display: flex;
+        gap: 12px;
+    }
+    
+    .popup-buttons button {
+        background: transparent;
+        border: none;
+        color: #FFCC33;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.2s;
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+    }
+    
+    .popup-buttons button:hover {
+        background: rgba(255,204,51,0.3);
+    }
+    
+    /* iframe 区域 */
+    .popup-iframe {
+        flex: 1;
+        width: 100%;
+        border: none;
+        background: white;
+    }
+    
+    /* 拖拽时的样式 */
+    .popup-container.dragging {
+        opacity: 0.9;
+        transition: none;
+    }
+    
+    /* 响应式 */
+    @media (max-width: 700px) {
+        .popup-container {
+            width: 95%;
+            height: 90%;
+            min-width: unset;
+        }
+        .popup-header {
+            font-size: 12px;
+            padding: 8px 12px;
+        }
+    }
+</style>
+
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup-container" id="popupContainer">
+        <div class="popup-header" id="popupHeader">
+            <span class="popup-title" id="popupTitle">加载中...</span>
+            <div class="popup-buttons">
+                <button id="popupRefresh" title="刷新">⟳</button>
+                <button id="popupClose" title="关闭">✕</button>
+            </div>
+        </div>
+        <iframe class="popup-iframe" id="popupIframe" src="about:blank"></iframe>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // 获取元素
+        const overlay = document.getElementById('popupOverlay');
+        const container = document.getElementById('popupContainer');
+        const header = document.getElementById('popupHeader');
+        const iframe = document.getElementById('popupIframe');
+        const titleSpan = document.getElementById('popupTitle');
+        const refreshBtn = document.getElementById('popupRefresh');
+        const closeBtn = document.getElementById('popupClose');
+        
+        // 拖拽相关变量
+        let isDragging = false;
+        let dragStartX, dragStartY, containerStartX, containerStartY;
+        
+        // 打开弹窗
+        function openPopup(url, title) {
+            iframe.src = url;
+            titleSpan.textContent = title || '加载中...';
+            overlay.style.display = 'flex';
+            // 重置位置（居中）
+            container.style.position = 'relative';
+            container.style.top = 'auto';
+            container.style.left = 'auto';
+            container.style.margin = '0';
+        }
+        
+        // 关闭弹窗
+        function closePopup() {
+            overlay.style.display = 'none';
+            iframe.src = 'about:blank';
+        }
+        
+        // 刷新弹窗
+        function refreshPopup() {
+            iframe.src = iframe.src;
+        }
+        
+        // 拖拽功能
+        function initDrag() {
+            header.addEventListener('mousedown', (e) => {
+                if (e.target === refreshBtn || e.target === closeBtn) return;
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                
+                // 获取当前容器位置（如果是相对定位，需要转成绝对定位）
+                const rect = container.getBoundingClientRect();
+                container.style.position = 'fixed';
+                container.style.top = rect.top + 'px';
+                container.style.left = rect.left + 'px';
+                container.style.margin = '0';
+                containerStartX = rect.left;
+                containerStartY = rect.top;
+                
+                container.classList.add('dragging');
+                e.preventDefault();
+            });
+        }
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - dragStartX;
+            const dy = e.clientY - dragStartY;
+            container.style.left = (containerStartX + dx) + 'px';
+            container.style.top = (containerStartY + dy) + 'px';
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            container.classList.remove('dragging');
+        });
+        
+        // 绑定按钮事件
+        closeBtn.addEventListener('click', closePopup);
+        refreshBtn.addEventListener('click', refreshPopup);
+        
+        // 点击遮罩层关闭（点击背景关闭）
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closePopup();
+        });
+        
+        // ESC 键关闭
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.style.display === 'flex') {
+                closePopup();
+            }
+        });
+        
+        // 暴露全局函数，方便其他脚本调用
+        window.openPopup = openPopup;
+        window.closePopup = closePopup;
+        
+        // 初始化拖拽
+        initDrag();
+        
+        // 自动绑定所有带有 .popup-link 类的链接
+        function bindPopupLinks() {
+            document.querySelectorAll('.popup-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const url = link.getAttribute('href');
+                    const title = link.getAttribute('data-title') || link.innerText.trim() || '网页';
+                    openPopup(url, title);
+                });
+            });
+        }
+        
+        // 页面加载完成后绑定
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bindPopupLinks);
+        } else {
+            bindPopupLinks();
+        }
     })();
 </script>
 </body>
