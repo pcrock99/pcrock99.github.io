@@ -23,5 +23,10 @@
         "name": "imgchr",
         "url": "https://imgchr.com/",
         "target": "_blank"
+    },
+   {
+        "name": "🐹在线",
+        "url": "https://hammyhome.com/",
+        "target": "_blank"
     }
 ]
