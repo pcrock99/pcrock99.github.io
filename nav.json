@@ -1,6 +1,6 @@
 [
     {
-        "name": "首页",
+        "name": "HOME",
         "url": "/",
         "target": "_self"
     },
@@ -15,13 +15,13 @@
         "target": "_blank"
     },
     {
-        "name": "路过",
-        "url": "https://imgchr.com/",
+        "name": "readest",
+        "url": "https://web.readest.com/",
         "target": "_blank"
     },
     {
-        "name": "空位",
-        "url": "",
+        "name": "imgchr",
+        "url": "https://imgchr.com/",
         "target": "_blank"
     }
 ]
