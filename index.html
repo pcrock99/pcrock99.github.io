@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PCROCK</title>
+    <title>PCROCK BLOG</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="favicon.ico" />
@@ -380,6 +380,7 @@
             <!-- 右侧内容 -->
             <div class="content-area">
                 <!-- 嵌入 bg 页面 -->
+                <div class="bg-embed">
                     <iframe src="https://pcrock99.github.io/bg" title="Bg页面"></iframe>
                 </div>
                 
@@ -787,14 +788,22 @@
         document.oncontextmenu = function() { return false; };
         document.onselectstart = function() { return false; };
     </script>
-
+<!-- 示例：放在摸鱼倒计时下面 -->
+<div style="position: fixed; bottom: 100px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+    <a class="popup-link" href="https://hammyhome.com/" data-title="在线仓鼠" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">🐹 在线仓鼠</a>
+    <a class="popup-link" href="https://thispersondoesnotexist.com/" data-title="AI人脸生成器" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">👤 AI人脸</a>
+    <a class="popup-link" href="https://we.dog/" data-title="舔狗日记" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">🐶 舔狗日记</a>
+    <a class="popup-link" href="https://www.yduanzi.com/" data-title="云段子" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">📖 云段子</a>
+    <a class="popup-link" href="https://suulnnka.github.io/BullshitGenerator/" data-title="狗屁不通文章生成器" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">📝 狗屁不通</a>
+    <a class="popup-link" href="https://lab.bangbang93.com/jichou" data-title="1907" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">😤 1907电影</a>
+</div>
     <!-- 摸鱼倒计时 -->
     <style>
         .moyu-clock {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(8px);
             color: #FFCC33;
             font-family: 'Courier New', monospace;
@@ -839,237 +848,102 @@
             }
         }
     </style>
-<!-- 浮动弹窗按钮 -->
-<div style="position: fixed; bottom: 100px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
-    <a class="popup-link" href="https://hammyhome.com/" data-title="在线仓鼠" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">🐹 在线仓鼠</a>
-    <a class="popup-link" href="https://thispersondoesnotexist.com/" data-title="AI人脸生成器" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">👤 AI人脸</a>
-    <a class="popup-link" href="https://we.dog/" data-title="舔狗日记" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;"> 舔狗日记</a>
-    <a class="popup-link" href="https://www.yduanzi.com/" data-title="云段子" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">📖 云段子</a>
-    <a class="popup-link" href="https://suulnnka.github.io/BullshitGenerator/" data-title="狗屁不通文章生成器" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">📝 狗屁不通</a>
-    <a class="popup-link" href="https://lab.bangbang93.com/jichou" data-title="记仇生成器" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;"> 记仇</a>
-    <a class="popup-link" href="https://clipboard.im/pcrock" data-title="剪帖板" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">剪帖板</a>
-</div>
-<!-- 右下角悬浮摸鱼功能区 -->
-<div style="position: fixed; bottom: 16px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
-    
-    <!-- 极细进度条（今天摸鱼进度） -->
-    <div style="width: 130px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
-        <div id="moyuProgressBar" style="width: 0%; height: 100%; background: #FFCC33; border-radius: 2px; transition: width 0.3s;"></div>
-    </div>
-    
-    <!-- 摸鱼倒计时主按钮 -->
-    <div class="moyu-clock" id="moyuClock" style="
-        background: rgba(0, 0, 0, 0);
-        backdrop-filter: blur(8px);
-        color: #FFCC33;
-        font-family: 'Courier New', monospace;
-        font-size: 14px;
-        padding: 10px 16px;
-        border-radius: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255,204,51,0.3);
-    ">
+
+    <div class="moyu-clock" id="moyuClock" title="点击刷新">
         <span class="moyu-time" id="moyuTime">--:--:--</span>
         <span class="moyu-label" id="moyuLabel">摸鱼倒计时</span>
     </div>
-</div>
 
-<script>
-    // ========== 摸鱼倒计时 + 毒鸡汤 + 搜索 ==========
-    (function() {
-        // 下班时间设置（24小时制）
-        const WORK_END_HOUR = 17;
-        const WORK_END_MINUTE = 30;
-        
-        //  毒鸡汤语录库
-const poisonSoup = [
-    "「工作做不完，明天再说吧。」",
-    "「你努力的样子，真像条咸鱼。」",
-    "「今天不想做，那就不做。」",
-    "「只要胆子大，天天寒暑假。」",
-    "「别急，deadline 会逼你完成的。」",
-    "「摸鱼一时爽，一直摸鱼一直爽。」",
-    "「效率是摸鱼的敌人。」",
-    "「代码写得快，不如摸鱼摸得帅。」",
-    "「下班前半小时，是一天最有效率的时候。」",
-    "「这个需求不急，先摸会鱼。」",
-    "「老板不在，天下我有。」",
-    "「不是我不想做，是电脑在编译。」",
-    "「Alt + Tab切屏的速度，直接关系到你摸鱼职业生涯能够持续的时长。」",
-    "「我的工作原则是：能摸鱼一分钟，绝不少摸五十九秒。」",
-    "「我并不是真的在拖延时间，我只是在给时间一个喘气的机会，顺便也让自己摸摸鱼。」",
-    "「摸鱼不是懒，是为了更高效地工作。」",
-    "「你以为你很累？其实你只是睡得晚而已。」",
-    "「只要我摸鱼够快，KPI就追不上我。」",
-    "「工资没涨，摸鱼技巧涨了不少。」",
-    "「今天的工作？明天再说，反正后天才是 deadline。」",
-    "「别人升职加薪，我摸鱼练出了腱鞘炎。」",
-    "「工作群里发消息：收到。心里想的：关我屁事。」",
-    "「代码跑不起来？一定是电脑的问题，重启试试。」",
-    "「这个 bug 我也不知道为什么，但它就是能跑。」",
-    "「编译中… 先摸 5 分钟鱼。」",
-    "「 Git push 了，剩下的交给 CI，我先下班了。」",
-    "「这个需求做不了，除非你把产品经理换掉。」",
-    "「摸鱼不是偷懒，是在为退休生活做预演。」",
-    "「人生苦短，摸鱼是唯一能掌控的自由。」",
-    "「如果你觉得工作太多，说明你效率太高了。」",
-    "「老板给你钱，不是让你努力，是让你完成工作。完成了就行，多努力都是亏。」",
-    "「工作是为了更好的摸鱼，摸鱼是为了更好的工作 —— 这叫平衡。」",
-    "「周一开会，周二摸鱼，周三等周五，周四等下班，周五等下班。」",
-    "「午休结束？不，是午休的延伸部分。」",
-    "「不是我不想回消息，是我在深度摸鱼。」",
-    "「加班是不可能加班的，这辈子都不可能。」",
-    "「上班如上坟，摸鱼如偷情。」",
-    "「世界上有两种光最耀眼，一种是太阳，一种是摸鱼时电脑屏幕的光。」",
-    "「如果摸鱼有罪，那我早已罪不可赦。」",
-    "「不是我不努力，是努力的方向还没找到（摸鱼的方向倒是找到了）。」",
-    "「工作是一场马拉松，但我在中途找了家奶茶店坐下不跑了。」",
-    "「每一个不曾摸鱼的日子，都是对生命的辜负。」"
-];        
-        function getRandomPoison() {
-            return poisonSoup[Math.floor(Math.random() * poisonSoup.length)];
-        }
-        
-        function formatTime(seconds) {
-            if (seconds <= 0) return null;
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = seconds % 60;
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
-        
-        function getWeekendSeconds(now) {
-            const day = now.getDay();
-            const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-            const endOfWorkSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
+    <script>
+        (function() {
+            const WORK_END_HOUR = 17;
+            const WORK_END_MINUTE = 30;
             
-            if (day === 5 && currentSec >= endOfWorkSec) {
-                const sundayEnd = new Date(now);
-                sundayEnd.setDate(now.getDate() + (7 - day));
-                sundayEnd.setHours(23, 59, 59, 999);
-                return Math.floor((sundayEnd - now) / 1000);
+            function formatTime(seconds) {
+                if (seconds <= 0) return null;
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
             }
-            if (day === 6) {
-                const sundayEnd = new Date(now);
-                sundayEnd.setDate(now.getDate() + (7 - day));
-                sundayEnd.setHours(23, 59, 59, 999);
-                return Math.floor((sundayEnd - now) / 1000);
-            }
-            if (day === 0) {
-                const dayEnd = new Date(now);
-                dayEnd.setHours(23, 59, 59, 999);
-                return Math.floor((dayEnd - now) / 1000);
-            }
-            return 0;
-        }
-        
-        function updateCountdown() {
-            const now = new Date();
-            const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-            const endSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
-            const day = now.getDay();
             
-            const timeEl = document.getElementById('moyuTime');
-            const labelEl = document.getElementById('moyuLabel');
-            if (!timeEl || !labelEl) return;
-            
-            if (day === 6 || day === 0) {
-                const weekendSec = getWeekendSeconds(now);
-                if (weekendSec > 0) {
-                    timeEl.innerText = formatTime(weekendSec);
-                    labelEl.innerText = '🌊 周末余额';
-                } else {
-                    timeEl.innerText = ' 摸鱼中';
-                    labelEl.innerText = '享受周末！';
+            function getWeekendSeconds(now) {
+                const day = now.getDay();
+                const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+                const endOfWorkSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
+                
+                if (day === 5 && currentSec >= endOfWorkSec) {
+                    const sundayEnd = new Date(now);
+                    sundayEnd.setDate(now.getDate() + (7 - day));
+                    sundayEnd.setHours(23, 59, 59, 999);
+                    return Math.floor((sundayEnd - now) / 1000);
                 }
-                return;
-            }
-            
-            if (day === 5 && currentSec >= endSec) {
-                const weekendSec = getWeekendSeconds(now);
-                if (weekendSec > 0) {
-                    timeEl.innerText = formatTime(weekendSec);
-                    labelEl.innerText = ' 周末倒计时';
-                } else {
-                    timeEl.innerText = ' 下班啦';
-                    labelEl.innerText = '周末愉快！';
+                if (day === 6) {
+                    const sundayEnd = new Date(now);
+                    sundayEnd.setDate(now.getDate() + (7 - day));
+                    sundayEnd.setHours(23, 59, 59, 999);
+                    return Math.floor((sundayEnd - now) / 1000);
                 }
-                return;
+                if (day === 0) {
+                    const dayEnd = new Date(now);
+                    dayEnd.setHours(23, 59, 59, 999);
+                    return Math.floor((dayEnd - now) / 1000);
+                }
+                return 0;
             }
             
-            if (currentSec < endSec) {
-                const remain = endSec - currentSec;
-                timeEl.innerText = formatTime(remain);
-                labelEl.innerText = day === 5 ? '🐟 周五下班' : '💼 下班倒计时';
-            } else {
-                timeEl.innerText = ' 已下班';
-                labelEl.innerText = '摸鱼愉快！';
-            }
-        }
-        
-        // 更新进度条（今天已过时间百分比）
-        function updateProgress() {
-            const now = new Date();
-            const startSec = 0; // 0:00
-            const endSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
-            const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-            const day = now.getDay();
-            
-            // 周末不显示进度条（隐藏）
-            const progressContainer = document.querySelector('#moyuProgressBar')?.parentElement;
-            if (progressContainer) {
+            function updateCountdown() {
+                const now = new Date();
+                const currentSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+                const endSec = WORK_END_HOUR * 3600 + WORK_END_MINUTE * 60;
+                const day = now.getDay();
+                
+                const timeEl = document.getElementById('moyuTime');
+                const labelEl = document.getElementById('moyuLabel');
+                
                 if (day === 6 || day === 0) {
-                    progressContainer.style.opacity = '0';
-                } else {
-                    progressContainer.style.opacity = '1';
-                    let percent = 0;
-                    if (currentSec < endSec) {
-                        percent = (currentSec / endSec) * 100;
+                    const weekendSec = getWeekendSeconds(now);
+                    if (weekendSec > 0) {
+                        timeEl.innerText = formatTime(weekendSec);
+                        labelEl.innerText = '🌊 周末余额';
                     } else {
-                        percent = 100;
+                        timeEl.innerText = '🎉 摸鱼中';
+                        labelEl.innerText = '享受周末！';
                     }
-                    const bar = document.getElementById('moyuProgressBar');
-                    if (bar) bar.style.width = percent + '%';
+                    return;
+                }
+                
+                if (day === 5 && currentSec >= endSec) {
+                    const weekendSec = getWeekendSeconds(now);
+                    if (weekendSec > 0) {
+                        timeEl.innerText = formatTime(weekendSec);
+                        labelEl.innerText = '🎉 周末倒计时';
+                    } else {
+                        timeEl.innerText = '🎉 下班啦';
+                        labelEl.innerText = '周末愉快！';
+                    }
+                    return;
+                }
+                
+                if (currentSec < endSec) {
+                    const remain = endSec - currentSec;
+                    timeEl.innerText = formatTime(remain);
+                    labelEl.innerText = day === 5 ? '🐟 周五下班' : '💼 下班倒计时';
+                } else {
+                    timeEl.innerText = '🎉 已下班';
+                    labelEl.innerText = '摸鱼愉快！';
                 }
             }
-        }
-        
-        // 摸鱼搜索（带毒鸡汤前置）
-        function moyuSearch() {
-            // 先弹一句毒鸡汤
-            alert(getRandomPoison());
-            // 再弹搜索框
-            const input = prompt('🎣 摸鱼时间到！输入视频链接或关键词：', '');
-            if (input && input.trim()) {
-                if (confirm(`确认解析「${input}」吗？\n摸鱼愉快~`)) {
-                    const baseUrl = 'https://im1907.top/?jx=';
-                    const url = baseUrl + encodeURIComponent(input.trim());
-                    window.open(url, '_blank');
-                }
-            }
-        }
-        
-        // 绑定摸鱼倒计时点击事件
-        const clockDiv = document.getElementById('moyuClock');
-        if (clockDiv) {
-            clockDiv.addEventListener('click', (e) => {
-                e.stopPropagation();
-                moyuSearch();
+            
+            const clockDiv = document.getElementById('moyuClock');
+            clockDiv.addEventListener('click', () => {
+                updateCountdown();
             });
-        }
-        
-        // 定时更新倒计时 + 进度条
-        updateCountdown();
-        updateProgress();
-        setInterval(() => {
+            
             updateCountdown();
-            updateProgress();
-        }, 1000);
-    })();
-</script>
+            setInterval(updateCountdown, 1000);
+        })();
+    </script>
 <!-- 浮动弹窗组件（iframe + 遮罩层） -->
 <style>
     /* 遮罩层 */
