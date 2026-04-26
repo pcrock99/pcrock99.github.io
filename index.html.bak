@@ -642,7 +642,7 @@
 
         async function loadPlaylist() {
             try {
-                const response = await fetch('https://pcrock99.github.io/d1/d/m3u/mp3list.m3u');
+                const response = await fetch('https://pcrock99.github.io/d1/d/list/mp3list.m3u');
                 if (!response.ok) throw new Error('M3U8列表加载失败');
                 const text = await response.text();
                 
