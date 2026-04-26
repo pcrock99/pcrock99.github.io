@@ -789,15 +789,59 @@
         document.onselectstart = function() { return false; };
     </script>
 <!-- 示例：放在摸鱼倒计时下面 -->
-<div style="position: fixed; bottom: 100px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
-    <a class="popup-link" href="https://hammyhome.com/" data-title="在线仓鼠" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">🐹 在线仓鼠</a>
-    <a class="popup-link" href="https://thispersondoesnotexist.com/" data-title="AI人脸生成器" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">👤 AI人脸</a>
-    <a class="popup-link" href="https://we.dog/" data-title="舔狗日记" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">🐶 舔狗日记</a>
-    <a class="popup-link" href="https://www.yduanzi.com/" data-title="云段子" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">📖 云段子</a>
-    <a class="popup-link" href="https://suulnnka.github.io/BullshitGenerator/" data-title="狗屁不通文章生成器" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">📝 狗屁不通</a>
-    <a class="popup-link" href="https://im1907.top/?jx=" data-title="1907" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">📽 1907电影</a>
-    <a class="popup-link" href="https://pcrock99.github.io/d1/d/html/cs.html" data-title="html预览" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">🦉 html预览</a>
+<!-- 摸鱼快捷面板（可收缩） -->
+<div style="position: fixed; bottom: 100px; right: 20px; z-index: 9999; display: flex; flex-direction: column; align-items: flex-end;">
+    <!-- 可收缩的按钮面板 -->
+    <div id="moyuPanel" style="display: none; flex-direction: column; gap: 8px; align-items: flex-end; margin-bottom: 8px; transition: all 0.3s ease;">
+        <a class="popup-link" href="https://hammyhome.com/" data-title="在线仓鼠" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px; transition: all 0.2s;">🐹 在线仓鼠</a>
+        <a class="popup-link" href="https://thispersondoesnotexist.com/" data-title="AI人脸生成器" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px; transition: all 0.2s;">👤 AI人脸</a>
+        <a class="popup-link" href="https://we.dog/" data-title="舔狗日记" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px; transition: all 0.2s;">🐶 舔狗日记</a>
+        <a class="popup-link" href="https://www.yduanzi.com/" data-title="云段子" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px; transition: all 0.2s;">📖 云段子</a>
+        <a class="popup-link" href="https://suulnnka.github.io/BullshitGenerator/" data-title="狗屁不通文章生成器" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px; transition: all 0.2s;">📝 狗屁不通</a>
+        <a class="popup-link" href="https://im1907.top/?jx=" data-title="1907" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px; transition: all 0.2s;">📽 1907电影</a>
+        <a class="popup-link" href="https://pcrock99.github.io/d1/d/html/cs.html" data-title="html预览" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px; transition: all 0.2s;">🦉 html预览</a>
+    </div>
 </div>
+
+<!-- 修改摸鱼倒计时的点击事件：切换面板 + 原有功能 -->
+<script>
+    (function() {
+        // 获取摸鱼面板
+        const moyuPanel = document.getElementById('moyuPanel');
+        let panelVisible = false;
+        
+        // 保存原来的摸鱼搜索函数
+        const originalMoyuSearch = moyuSearch;
+        
+        // 重写摸鱼搜索函数：先切换面板，再执行搜索
+        window.moyuSearch = function() {
+            // 切换面板显示/隐藏
+            if (moyuPanel) {
+                if (panelVisible) {
+                    moyuPanel.style.display = 'none';
+                    panelVisible = false;
+                } else {
+                    moyuPanel.style.display = 'flex';
+                    panelVisible = true;
+                }
+            }
+            // 执行原来的摸鱼搜索（毒鸡汤 + 搜索框）
+            originalMoyuSearch();
+        };
+        
+        // 重新绑定摸鱼倒计时的点击事件
+        const clockDiv = document.getElementById('moyuClock');
+        if (clockDiv) {
+            // 移除原有事件（避免重复绑定）
+            const newClock = clockDiv.cloneNode(true);
+            clockDiv.parentNode.replaceChild(newClock, clockDiv);
+            newClock.addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.moyuSearch();
+            });
+        }
+    })();
+</script>
     <!-- 摸鱼倒计时 -->
     <style>
         .moyu-clock {
