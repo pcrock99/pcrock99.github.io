@@ -754,7 +754,22 @@
         // 绑定下载按钮
         const downloadBtn = document.getElementById('downloadBtn');
         if (downloadBtn) {
-            downloadBtn.onclick = downloadCurrentSong;
+            downloadBtn.onclick = () => {
+                if (!playlist.length || !playlist[currentIndex]) {
+                    alert('当前没有歌曲');
+                    return;
+                }
+                const song = playlist[currentIndex];
+                const a = document.createElement('a');
+                a.href = song.url;
+                a.download = song.name + '.mp3';
+                a.target = '_blank';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                // 安静下载，不弹窗
+                console.log(`下载: ${song.name}`);  // 可选：控制台留个记录
+            };
         }
 
         function playPause() {
