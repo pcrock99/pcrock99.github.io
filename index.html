@@ -359,7 +359,8 @@
             <div class="right-group">
                 <div id="time" class="time-display"></div>
                 <div class="music-player">
-                    <button id="playBtn">▶</button>
+                    <button id="downloadBtn" title="下载当前歌曲" style="background: rgba(64,64,64,0.8); color:white; border:none; font-size:18px; width:34px; height:34px; border-radius:50%; cursor:pointer; backdrop-filter:blur(4px);">⇩</button>
+                    <button id="playBtn">▷</button>
                     <button id="nextBtn">⏭</button>
                     <span class="song-name" id="songName">未播放</span>
                 </div>
@@ -723,6 +724,39 @@
                 }
             }
         }
+
+        // 下载当前歌曲
+        function downloadCurrentSong() {
+            if (playlist.length === 0) {
+                alert('歌单为空，无法下载');
+                return;
+            }
+            const song = playlist[currentIndex];
+            if (!song || !song.url) {
+                alert('当前歌曲信息无效');
+                return;
+            }
+            // 创建隐藏的 <a> 标签触发下载
+            const a = document.createElement('a');
+            a.href = song.url;
+            a.download = song.name + '.mp3';  // 建议文件名，不一定生效（跨域限制）
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            // 可选提示
+            console.log(`开始下载: ${song.name}`);
+            // 如果浏览器不支持 download 属性（或跨域），会直接打开链接，可以加个提示
+            alert(`正在下载: ${song.name}\n如果未开始，请检查浏览器弹窗设置`);
+        }
+
+        // 绑定下载按钮
+        const downloadBtn = document.getElementById('downloadBtn');
+        if (downloadBtn) {
+            downloadBtn.onclick = downloadCurrentSong;
+        }
+
         function playPause() {
             if (playlist.length === 0) return;
             if (isPlaying) {
