@@ -1,31 +1,31 @@
 [
     {
-        "name": "HOME",
+        "name": "🏠 HOME",
         "url": "/",
         "target": "_self"
     },
     {
-        "name": "github",
+        "name": "🐙 github",
         "url": "https://github.com/",
         "target": "_blank"
     },
     {
-        "name": "deepseek",
+        "name": "🤖 deepseek",
         "url": "https://deepseek.com/",
         "target": "_blank"
     },
     {
-        "name": "doubao",
+        "name": "💬 doubao",
         "url": "https://doubao.com/",
         "target": "_blank"
     },
     {
-        "name": "readest",
+        "name": "📖 readest",
         "url": "https://web.readest.com/",
         "target": "_blank"
     },
     {
-        "name": "imgchr",
+        "name": "🖼️ imgchr",
         "url": "https://imgchr.com/",
         "target": "_blank"
     }
