@@ -359,7 +359,6 @@
             <div class="right-group">
                 <div id="time" class="time-display"></div>
                 <div class="music-player">
-                    <button id="playlistBtn" title="歌单列表" style="background: rgba(64,64,64,0.8); color:white; border:none; font-size:18px; width:34px; height:34px; border-radius:50%; cursor:pointer; backdrop-filter:blur(4px);">📋</button>
                     <button id="downloadBtn" title="下载当前歌曲" style="background: rgba(64,64,64,0.8); color:white; border:none; font-size:18px; width:34px; height:34px; border-radius:50%; cursor:pointer; backdrop-filter:blur(4px);">⇩</button>
                     <button id="playBtn">▷</button>
                     <button id="nextBtn">⏭</button>
@@ -656,43 +655,70 @@
             }
         }
 
-        // 歌单列表按钮
-        const playlistBtn = document.getElementById('playlistBtn');
-        if (playlistBtn) {
-            playlistBtn.onclick = () => {
-                // 弹出歌单窗口（独立 HTML）
-                const url = 'https://pcrock99.github.io/d1/d/html/playlist.html';
-                const title = '📋 歌单列表';
-                if (typeof window.openPopup === 'function') {
-                    window.openPopup(url, title);
-                } else {
-                    window.open(url, '_blank');
-                }
-            };
-        }
+// 歌单列表浮层
+const playlistOverlay = document.getElementById('playlistOverlay');
+const playlistList = document.getElementById('playlistList');
+const closePlaylistBtn = document.getElementById('closePlaylistBtn');
 
-        // 监听来自歌单弹窗的消息
-        window.addEventListener('message', (e) => {
-            if (e.data.type === 'GET_PLAYLIST') {
-                // 发送当前歌单给弹窗
-                e.source.postMessage({
-                    type: 'PLAYLIST_DATA',
-                    playlist: playlist.map(song => ({ name: song.name, url: song.url }))
-                }, '*');
-            }
-            if (e.data.type === 'PLAY_SONG') {
-                // 播放选中的歌曲
-                const idx = e.data.index;
-                if (playlist[idx]) {
-                    currentIndex = idx;
-                    tryLoadSong(currentIndex);
-                    // 如果当前是暂停状态，自动开始播放
-                    if (!isPlaying) {
-                        playPause();
-                    }
-                }
+// 渲染歌单列表
+function renderPlaylist() {
+    if (!playlist.length) {
+        playlistList.innerHTML = '<div style="text-align:center; padding:20px; color:#aaa;">暂无歌曲</div>';
+        return;
+    }
+    playlistList.innerHTML = playlist.map((song, idx) => `
+        <div class="playlist-item" data-index="${idx}">
+            <span class="playlist-item-name">${escapeHtml(song.name)}</span>
+            <span class="playlist-item-play">▶</span>
+        </div>
+    `).join('');
+    
+    // 绑定点击播放事件
+    document.querySelectorAll('.playlist-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const idx = parseInt(item.dataset.index);
+            if (playlist[idx]) {
+                currentIndex = idx;
+                tryLoadSong(currentIndex);
+                // 自动播放
+                if (!isPlaying) playPause();
+                // 关闭浮层
+                playlistOverlay.style.display = 'none';
             }
         });
+    });
+}
+
+// 打开歌单浮层
+function openPlaylist() {
+    renderPlaylist();
+    playlistOverlay.style.display = 'flex';
+}
+
+// 关闭浮层
+closePlaylistBtn.onclick = () => {
+    playlistOverlay.style.display = 'none';
+};
+playlistOverlay.addEventListener('click', (e) => {
+    if (e.target === playlistOverlay) playlistOverlay.style.display = 'none';
+});
+
+// 绑定摸鱼面板里的“歌单列表”按钮
+const showPlaylistBtn = document.getElementById('showPlaylistBtn');
+if (showPlaylistBtn) {
+    showPlaylistBtn.onclick = openPlaylist;
+}
+
+// 辅助函数
+function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
 
         function isLinkReachable(url, timeout = 4000) {
             return new Promise((resolve) => {
@@ -822,7 +848,9 @@
         <a class="popup-link" href="https://im1907.top/?jx=" data-title="1907" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">📽 1907电影</a>
         <a class="popup-link" href="https://pcrock99.github.io/d1/d/html/cs.html" data-title="html预览" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">🦉 html预览</a>
         <a class="popup-link" href="https://pcrock99.github.io/d1/d/html/json.html" data-title="html预览" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px;">🦉 json修复</a>
+        <a id="showPlaylistBtn" style="background: rgba(0,0,0,0.1); backdrop-filter: blur(8px); color: #FFCC33; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 12px; cursor: pointer;">📋 歌单列表</a>
     </div>
+    
 
     <!-- 摸鱼倒计时 -->
     <style>
@@ -1189,5 +1217,87 @@
             setInterval(runLight, SPEED);
         })();
     </script>
+<!-- 歌单列表浮层 -->
+<style>
+    .playlist-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        z-index: 10001;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+    .playlist-container {
+        width: 90%;
+        max-width: 500px;
+        height: 70%;
+        background: #1a1a2e;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .playlist-header {
+        background: rgba(0,0,0,0.6);
+        color: #FFCC33;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255,204,51,0.3);
+    }
+    .playlist-header button {
+        background: transparent;
+        border: none;
+        color: #FFCC33;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    .playlist-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 12px;
+    }
+    .playlist-item {
+        background: rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 10px 16px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        justify-content: space-between;
+    }
+    .playlist-item:hover {
+        background: rgba(255,204,51,0.3);
+        transform: translateX(4px);
+    }
+    .playlist-item-name {
+        color: #FFF;
+        font-size: 14px;
+    }
+    .playlist-item-play {
+        color: #FFCC33;
+        font-size: 16px;
+    }
+</style>
+
+<div class="playlist-overlay" id="playlistOverlay">
+    <div class="playlist-container">
+        <div class="playlist-header">
+            <span>📋 歌单列表</span>
+            <button id="closePlaylistBtn">✕</button>
+        </div>
+        <div class="playlist-list" id="playlistList">
+            <div style="text-align:center; padding:20px; color:#aaa;">加载中...</div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
