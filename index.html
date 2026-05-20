@@ -852,7 +852,7 @@
             };
         }
         
-        // 歌单列表浮层逻辑
+        // 歌单列表浮层逻辑（增强版：等待歌单加载完成）
         const playlistOverlay = document.getElementById('playlistOverlay');
         const playlistList = document.getElementById('playlistList');
         const closePlaylistBtn = document.getElementById('closePlaylistBtn');
@@ -892,8 +892,20 @@
         }
         
         function openPlaylist() {
-            if (playlist.length === 0) {
-                alert('歌单还在加载中，请稍后再试');
+            // 歌单还没加载完，等待一下
+            if (!playlist.length) {
+                const waitingMsg = '歌单加载中，请稍后再试...';
+                playlistList.innerHTML = `<div style="text-align:center; padding:20px; color:#aaa;">${waitingMsg}</div>`;
+                playlistOverlay.style.display = 'flex';
+                // 设置一个定时器，等歌单加载后自动刷新
+                const checkInterval = setInterval(() => {
+                    if (playlist.length) {
+                        clearInterval(checkInterval);
+                        renderPlaylist();
+                    }
+                }, 200);
+                // 超时 5 秒后停止检查
+                setTimeout(() => clearInterval(checkInterval), 5000);
                 return;
             }
             renderPlaylist();
