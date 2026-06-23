@@ -557,6 +557,7 @@
             }
         }
     </style>
+    <script src="tools.js"></script>
 </head>
 <body>
 
@@ -615,18 +616,7 @@
     </div>
 
     <!-- 右侧工具条 -->
-    <div id="toolBox" style="position: fixed; bottom: 100px; right: 20px; z-index: 9999; display: none; flex-direction: column; gap: 8px; align-items: flex-end;">
-        <a class="popup-link" href="https://pcrock99.github.io/d1/d/html/figlet-tool.html" data-title="figlet">figlet</a>
-        <a class="popup-link" href="https://hammyhome.com/" data-title="在线仓鼠">🐹 在线仓鼠</a>
-        <a class="popup-link" href="https://thispersondoesnotexist.com/" data-title="AI人脸生成器">👤 AI人脸</a>
-        <a class="popup-link" href="https://we.dog/" data-title="舔狗日记">🐶 舔狗日记</a>
-        <a class="popup-link" href="https://www.yduanzi.com/" data-title="云段子">📖 云段子</a>
-        <a class="popup-link" href="https://suulnnka.github.io/BullshitGenerator/" data-title="狗屁不通文章生成器">📝 狗屁不通</a>
-        <a class="popup-link" href="https://im1907.top/?jx=" data-title="1907">📽 1907电影</a>
-        <a class="popup-link" href="https://pcrock99.github.io/d1/d/html/cs.html" data-title="html预览">🦉 html预览</a>
-        <a class="popup-link" href="https://pcrock99.github.io/d1/d/html/json.html" data-title="html预览">🦉 json修复</a>
-        <a id="showPlaylistBtn" style="cursor: pointer;">📋 歌单列表</a>
-    </div>
+    <div id="toolBox" style="position: fixed; bottom: 100px; right: 20px; z-index: 9999; display: none; flex-direction: column; gap: 8px; align-items: flex-end;"></div>
 
     <!-- 摸鱼倒计时 -->
     <div class="moyu-clock" id="moyuClock" title="点击展开/收起工具">
@@ -1187,10 +1177,27 @@
         document.oncontextmenu = () => false;
         document.onselectstart = () => false;
         
+        // ==================== 工具条加载（JSON 数据驱动） ====================
+        function loadTools() {
+            const toolBox = document.getElementById('toolBox');
+            if (toolBox && typeof TOOLS_DATA !== 'undefined') {
+                toolBox.innerHTML = generateToolsHTML();
+                toolBox.querySelectorAll('.popup-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.openPopup(link.getAttribute('href'), link.getAttribute('data-title') || link.innerText.trim());
+                    });
+                });
+                const showBtn = document.getElementById('showPlaylistBtn');
+                if (showBtn) showBtn.onclick = openPlaylist;
+            }
+        }
+
         // 启动
         loadNav();
         loadPosts();
         loadPlaylist();
+        loadTools();
         updateQuote();
         startQuoteTimer();
     </script>
